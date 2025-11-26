@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
-// API base URL from environment or default to localhost
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8006';
+// Production API URL (hardcoded for hackathon)
+const API_BASE_URL = 'https://squid-app-7q77b.ondigitalocean.app/api';
 
 interface LeaderboardEntry {
   rank: number;
