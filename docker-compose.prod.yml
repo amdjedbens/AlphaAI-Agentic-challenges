@@ -1,0 +1,87 @@
+# Production Docker Compose for DigitalOcean
+# Optimized for stability with health checks, restart policies, and resource limits
+
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rag-backend
+    restart: always  # Auto-restart on crash
+    ports:
+      - "8006:8006"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./data:/app/data
+      - backend_chroma:/app/chroma_db
+      - backend_db:/app/challenges.db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8006/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s  # ML models take time to load
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: rag-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8006}
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Watchtower: Auto-updates containers when you push new images
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=300  # Check every 5 minutes
+    command: --interval 300
+
+volumes:
+  backend_chroma:
+    driver: local
+  backend_db:
+    driver: local
+

@@ -1,0 +1,339 @@
+@import "tailwindcss";
+
+:root {
+  /* Alpha AI Color Palette */
+  --background: #0b0f2b;
+  --background-secondary: #132562;
+  --background-tertiary: #173274;
+  --background-gradient-start: #0b0f2b;
+  --background-gradient-mid: rgba(19, 37, 98, 1);
+  --background-gradient-end: rgba(43, 71, 176, 1);
+  
+  --foreground: #F2EBF0;
+  --card-bg: #16193a;
+  --card-border: rgba(0, 236, 217, 0.2);
+  
+  /* Accent Colors */
+  --accent-primary: #00ECD9;
+  --accent-cyan: #01F0DD;
+  --accent-purple: #5D61EE;
+  --accent-magenta: #C611D3;
+  --accent-success: #10b981;
+  --accent-warning: #f59e0b;
+  --accent-danger: #ef4444;
+  
+  --text-muted: #71717a;
+  --text-secondary: #a1a1aa;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--card-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-cyan);
+  border-radius: 4px;
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* Alpha AI Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 50%, var(--accent-magenta) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-cyan {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, #2BC0DB 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effects - Alpha AI style */
+.glow-primary {
+  box-shadow: 0 0 30px rgba(0, 236, 217, 0.4);
+}
+
+.glow-secondary {
+  box-shadow: 0 0 20px rgba(93, 97, 238, 0.3);
+}
+
+.glow-magenta {
+  box-shadow: 0 0 20px rgba(198, 17, 211, 0.3);
+}
+
+/* Star glow effect */
+.star-glow {
+  filter: drop-shadow(0 0 10px rgba(195, 19, 212, 0.8));
+}
+
+/* Card styles - Alpha AI themed */
+.card {
+  background: linear-gradient(135deg, rgba(22, 25, 58, 0.9) 0%, rgba(19, 37, 98, 0.8) 100%);
+  border: 1px solid rgba(0, 236, 217, 0.15);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  border-color: var(--accent-cyan);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 236, 217, 0.2);
+}
+
+/* Button styles - Alpha AI themed */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, #00d9c7 100%);
+  color: #0b0f2b;
+  padding: 0.75rem 1.5rem;
+  border-radius: 100px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 236, 217, 0.5);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 236, 217, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--foreground);
+  padding: 0.75rem 1.5rem;
+  border-radius: 100px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0, 236, 217, 0.2);
+}
+
+/* Badge styles */
+.badge {
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-beginner {
+  background: rgba(0, 236, 217, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0, 236, 217, 0.3);
+}
+
+.badge-medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-hard {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--accent-danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Code block */
+.code-block {
+  background: rgba(11, 15, 43, 0.8);
+  border: 1px solid rgba(0, 236, 217, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875rem;
+  overflow-x: auto;
+}
+
+/* Alpha AI Background patterns */
+.bg-alpha-gradient {
+  background: linear-gradient(180deg, 
+    var(--background-gradient-start) 0%, 
+    var(--background-gradient-mid) 40%, 
+    var(--background-gradient-end) 100%);
+}
+
+.bg-alpha-reverse {
+  background: linear-gradient(180deg, 
+    var(--background-gradient-end) 0%, 
+    var(--background-gradient-mid) 60%, 
+    var(--background-gradient-start) 100%);
+}
+
+/* Animated gradient border - Alpha AI style */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(135deg, rgba(22, 25, 58, 0.95) 0%, rgba(19, 37, 98, 0.9) 100%);
+  border-radius: 16px;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-magenta), var(--accent-cyan));
+  border-radius: 18px;
+  z-index: -1;
+  background-size: 300% 300%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Pulse animation - Alpha AI cyan */
+@keyframes pulse-glow {
+  0%, 100% { 
+    opacity: 0.6;
+    box-shadow: 0 0 10px rgba(0, 236, 217, 0.3);
+  }
+  50% { 
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(0, 236, 217, 0.6);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Fade in animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animation-delay-100 { animation-delay: 0.1s; }
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-300 { animation-delay: 0.3s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+
+/* Floating animation for decorative elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Star sparkle animation */
+@keyframes sparkle {
+  0%, 100% { 
+    opacity: 0.7;
+    filter: drop-shadow(0 0 8px rgba(195, 19, 212, 0.6));
+  }
+  50% { 
+    opacity: 1;
+    filter: drop-shadow(0 0 15px rgba(195, 19, 212, 0.9));
+  }
+}
+
+.animate-sparkle {
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+/* Circle decorative element */
+.circle-decoration {
+  border: 1px solid rgba(0, 236, 217, 0.3);
+  border-radius: 50%;
+  background: rgba(0, 236, 217, 0.05);
+  backdrop-filter: blur(4px);
+}
+
+/* Section divider */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(0, 236, 217, 0.3) 20%, 
+    rgba(0, 236, 217, 0.5) 50%, 
+    rgba(0, 236, 217, 0.3) 80%, 
+    transparent 100%);
+}
+
+/* Input styles - Alpha AI themed */
+input, select, textarea {
+  background: rgba(11, 15, 43, 0.6) !important;
+  border: 1px solid rgba(0, 236, 217, 0.2) !important;
+  color: var(--foreground) !important;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent-cyan) !important;
+  box-shadow: 0 0 15px rgba(0, 236, 217, 0.2) !important;
+  outline: none !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Table styles */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+thead tr {
+  background: rgba(11, 15, 43, 0.8);
+}
+
+tbody tr {
+  border-bottom: 1px solid rgba(0, 236, 217, 0.1);
+  transition: background 0.2s ease;
+}
+
+tbody tr:hover {
+  background: rgba(0, 236, 217, 0.05);
+}

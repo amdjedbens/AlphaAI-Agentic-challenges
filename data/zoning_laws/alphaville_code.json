@@ -1,0 +1,148 @@
+[
+  {
+    "id": "clause_A_1",
+    "content": "ZONE A - COMMERCIAL DISTRICT: Zone A is designated for commercial activities including retail stores, restaurants, offices, and service establishments. Residential use is prohibited in Zone A unless granted special variance by the Zoning Board.",
+    "metadata": {"zone": "A", "category": "general", "section": "1"}
+  },
+  {
+    "id": "clause_A_2",
+    "content": "ZONE A HEIGHT LIMITS: Buildings in Zone A shall not exceed 6 stories or 75 feet in height, whichever is less. Rooftop mechanical equipment may extend an additional 15 feet above the height limit.",
+    "metadata": {"zone": "A", "category": "height", "section": "2"}
+  },
+  {
+    "id": "clause_A_3",
+    "content": "ZONE A LOT COVERAGE: Maximum lot coverage in Zone A-Commercial shall be 80% of the total lot area. Green space or landscaping must comprise at least 10% of the lot.",
+    "metadata": {"zone": "A", "category": "coverage", "section": "3"}
+  },
+  {
+    "id": "clause_A_4",
+    "content": "ZONE A PARKING: Commercial establishments in Zone A must provide 1 parking space per 300 square feet of floor area. Restaurants must provide 1 parking space per 4 seats plus 1 space per 2 employees.",
+    "metadata": {"zone": "A", "category": "parking", "section": "4"}
+  },
+  {
+    "id": "clause_B_1",
+    "content": "ZONE B - MIXED USE DISTRICT: Zone B permits both commercial and residential uses. Ground floor commercial with upper-floor residential is encouraged. Standalone residential buildings are permitted.",
+    "metadata": {"zone": "B", "category": "general", "section": "1"}
+  },
+  {
+    "id": "clause_B_2",
+    "content": "ZONE B HEIGHT LIMITS: Buildings in Zone B shall not exceed 4 stories or 50 feet for residential structures. Mixed-use buildings may reach 5 stories or 60 feet maximum.",
+    "metadata": {"zone": "B", "category": "height", "section": "2"}
+  },
+  {
+    "id": "clause_B_2_conflict",
+    "content": "ZONE B HEIGHT EXCEPTION: Notwithstanding clause B.2, residential buildings in Zone B may be constructed up to 2 stories only when located within 500 feet of Zone R-1 boundaries to maintain neighborhood character.",
+    "metadata": {"zone": "B", "category": "height", "section": "2.1"}
+  },
+  {
+    "id": "clause_B_3",
+    "content": "ZONE B SETBACKS: Front setback minimum 15 feet. Side setbacks minimum 10 feet each. Rear setback minimum 20 feet. Corner lots must maintain 15-foot setbacks on both street-facing sides.",
+    "metadata": {"zone": "B", "category": "setbacks", "section": "3"}
+  },
+  {
+    "id": "clause_B_4",
+    "content": "ZONE B ACCESSORY STRUCTURES: Sheds, garages, and accessory structures in Zone B may not exceed 2 stories or 25 feet in height. Total accessory structure footprint shall not exceed 30% of rear yard area.",
+    "metadata": {"zone": "B", "category": "accessory", "section": "4"}
+  },
+  {
+    "id": "clause_R1_1",
+    "content": "ZONE R-1 - SINGLE FAMILY RESIDENTIAL: Zone R-1 is exclusively for single-family detached dwellings. Each lot must contain only one primary dwelling unit. Home occupations are permitted with restrictions.",
+    "metadata": {"zone": "R-1", "category": "general", "section": "1"}
+  },
+  {
+    "id": "clause_R1_2",
+    "content": "ZONE R-1 HEIGHT LIMITS: Structures in Zone R-1 shall not exceed 2.5 stories or 35 feet in height. Chimneys and architectural features may extend 5 feet above the roofline.",
+    "metadata": {"zone": "R-1", "category": "height", "section": "2"}
+  },
+  {
+    "id": "clause_R1_3",
+    "content": "ZONE R-1 HOME OCCUPATIONS: Home-based businesses are permitted in Zone R-1 provided: (a) no more than 25% of floor area is used for business, (b) no external signage, (c) no customer visits exceeding 5 per day, (d) no employees other than household residents. Food preparation businesses (bakeries, catering) are PROHIBITED due to health and safety concerns.",
+    "metadata": {"zone": "R-1", "category": "home_business", "section": "3"}
+  },
+  {
+    "id": "clause_R1_3_exception",
+    "content": "ZONE R-1 HOME OCCUPATION EXCEPTION: Home-based food businesses (cottage food operations) may be permitted in Zone R-1 with a Special Use Permit from the Health Department, limited to non-hazardous baked goods and confections with annual revenue not exceeding $50,000.",
+    "metadata": {"zone": "R-1", "category": "home_business", "section": "3.1"}
+  },
+  {
+    "id": "clause_R1_4",
+    "content": "ZONE R-1 LOT SIZE: Minimum lot size in Zone R-1 is 10,000 square feet (approximately 0.23 acres). Lot subdivision is permitted only if resulting parcels each meet the minimum lot size requirement.",
+    "metadata": {"zone": "R-1", "category": "lot_size", "section": "4"}
+  },
+  {
+    "id": "clause_R2_1",
+    "content": "ZONE R-2 - MULTI-FAMILY RESIDENTIAL: Zone R-2 permits single-family homes, duplexes, triplexes, and apartment buildings up to 12 units. Conversion of single-family homes to multi-family use requires site plan approval.",
+    "metadata": {"zone": "R-2", "category": "general", "section": "1"}
+  },
+  {
+    "id": "clause_R2_2",
+    "content": "ZONE R-2 HEIGHT LIMITS: Buildings in Zone R-2 shall not exceed 3 stories or 40 feet in height for structures containing 4 or fewer units. Buildings with 5-12 units may reach 4 stories or 50 feet.",
+    "metadata": {"zone": "R-2", "category": "height", "section": "2"}
+  },
+  {
+    "id": "clause_R2_3",
+    "content": "ZONE R-2 ACCESSORY STRUCTURES: Detached garages in Zone R-2 are limited to 600 square feet maximum footprint and 15 feet in height. Structures exceeding 400 square feet require a building permit.",
+    "metadata": {"zone": "R-2", "category": "accessory", "section": "3"}
+  },
+  {
+    "id": "clause_R2_4",
+    "content": "ZONE R-2 CONVERSION REQUIREMENTS: Single-family to duplex conversion in Zone R-2 requires: (a) minimum lot size of 7,500 square feet, (b) 2 off-street parking spaces per unit, (c) no changes to exterior facades facing the street.",
+    "metadata": {"zone": "R-2", "category": "conversion", "section": "4"}
+  },
+  {
+    "id": "clause_C1_1",
+    "content": "ZONE C-1 - NEIGHBORHOOD COMMERCIAL: Zone C-1 is for small-scale commercial serving residential neighborhoods. Permitted uses include small retail, cafes, personal services, and professional offices under 5,000 square feet.",
+    "metadata": {"zone": "C-1", "category": "general", "section": "1"}
+  },
+  {
+    "id": "clause_C1_2",
+    "content": "ZONE C-1 PARKING: All uses in Zone C-1 must provide parking at the following rates: Retail/Office - 1 space per 250 sq ft; Restaurant/Cafe - 1 space per 3 seats OR 1 space per 100 sq ft, whichever is greater; Personal services - 1 space per 200 sq ft.",
+    "metadata": {"zone": "C-1", "category": "parking", "section": "2"}
+  },
+  {
+    "id": "clause_HD_1",
+    "content": "HERITAGE DISTRICT OVERLAY: Properties within the Heritage District are subject to additional architectural review. All exterior modifications visible from public rights-of-way require approval from the Historic Preservation Commission.",
+    "metadata": {"zone": "Heritage", "category": "general", "section": "1"}
+  },
+  {
+    "id": "clause_HD_2",
+    "content": "HERITAGE DISTRICT SOLAR PANELS: Solar panel installations on buildings in the Heritage District are PROHIBITED on street-facing roof surfaces. Installations on rear-facing or non-visible surfaces may be approved case-by-case.",
+    "metadata": {"zone": "Heritage", "category": "solar", "section": "2"}
+  },
+  {
+    "id": "clause_HD_2_update",
+    "content": "HERITAGE DISTRICT SOLAR (2024 AMENDMENT): To promote renewable energy, solar panels ARE NOW PERMITTED on Heritage District buildings provided they are (a) flat-mounted, (b) not visible from primary street frontage, (c) colored to match existing roof materials. This supersedes previous restrictions in section HD.2.",
+    "metadata": {"zone": "Heritage", "category": "solar", "section": "2.1"}
+  },
+  {
+    "id": "clause_GP_1",
+    "content": "FENCE REQUIREMENTS: Front yard fences in all residential zones shall not exceed 4 feet in height. Side and rear yard fences may be up to 6 feet. Privacy fences over 4 feet in front yards are prohibited.",
+    "metadata": {"zone": "General", "category": "fences", "section": "1"}
+  },
+  {
+    "id": "clause_GP_2",
+    "content": "VARIANCE PROCESS: Property owners may apply for variances from these regulations by submitting an application to the Zoning Board. Variances require demonstration of hardship and will be reviewed at public hearings held monthly.",
+    "metadata": {"zone": "General", "category": "variance", "section": "2"}
+  },
+  {
+    "id": "clause_GP_3",
+    "content": "NON-CONFORMING USES: Existing uses that do not conform to current zoning may continue as legal non-conforming uses. Expansion of non-conforming uses is prohibited. If discontinued for 12 months, non-conforming status is lost.",
+    "metadata": {"zone": "General", "category": "nonconforming", "section": "3"}
+  },
+  {
+    "id": "clause_GP_4",
+    "content": "ENVIRONMENTAL SETBACKS: All structures must maintain a 100-foot setback from wetlands, streams, and designated flood zones. This requirement supersedes zone-specific setbacks when applicable.",
+    "metadata": {"zone": "General", "category": "environmental", "section": "4"}
+  },
+  {
+    "id": "clause_R1_5",
+    "content": "ZONE R-1 SUBDIVISION: Lot subdivision in Zone R-1 requires approval from the Planning Commission. The original lot must be at least 20,000 square feet (approximately 0.46 acres) to be subdivided into two conforming lots.",
+    "metadata": {"zone": "R-1", "category": "subdivision", "section": "5"}
+  },
+  {
+    "id": "clause_B_5",
+    "content": "ZONE B RESIDENTIAL DENSITY: Maximum residential density in Zone B is 20 units per acre for multi-family projects. Mixed-use developments may increase density to 25 units per acre with ground-floor retail.",
+    "metadata": {"zone": "B", "category": "density", "section": "5"}
+  }
+]
+
