@@ -1,24 +1,29 @@
 # Backend Dockerfile for FastAPI + ML dependencies
-# Uses uv for fast dependency installation
+# Optimized for smaller build footprint (CPU-only PyTorch)
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies and uv
-RUN apt-get update && apt-get install -y \
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
-    && curl -LsSf https://astral.sh/uv/install.sh | sh \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-# Add uv to PATH
+# Install uv for fast dependency installation
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies with uv (much faster than pip)
+# Install Python dependencies with uv
+# Using --no-cache to reduce memory usage during build
 RUN uv pip install --system --no-cache -r requirements.txt
+
+# Pre-download the embedding model during build (cached in image)
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
 
 # Copy application code
 COPY . .

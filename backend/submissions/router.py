@@ -22,12 +22,36 @@ from evaluation.judge import (
     FACTCHECK_GOLDEN_ANSWERS,
     LEGAL_GOLDEN_ANSWERS
 )
+from auth.team_keys import validate_team_key, get_all_team_keys
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+
+@router.post("/validate-key")
+async def validate_key(team_key: str = Form(...)):
+    """
+    Validate a team key and return the team name if valid.
+    Use this to verify your key before submitting.
+    """
+    team_name = validate_team_key(team_key)
+    if not team_name:
+        raise HTTPException(
+            status_code=401, 
+            detail="Invalid team key. Please use the key provided to your team."
+        )
+    return {"valid": True, "team_name": team_name}
+
+
+@router.get("/teams")
+async def get_teams():
+    """Get list of all registered team names (without keys)."""
+    from auth.team_keys import TEAMS
+    return {"teams": TEAMS}
+
 
 # Test questions for evaluation
 FACTCHECK_TEST_QUESTIONS = [
@@ -47,7 +71,7 @@ LEGAL_TEST_QUESTIONS = [
 
 @router.post("/api-endpoint", response_model=SubmissionResponse)
 async def submit_api_endpoint(
-    team_name: str = Form(...),
+    team_key: str = Form(...),
     challenge_id: str = Form(...),
     api_url: str = Form(...),
     background_tasks: BackgroundTasks = None,
@@ -57,6 +81,11 @@ async def submit_api_endpoint(
     Submit an API endpoint for evaluation.
     The endpoint should accept POST requests with query/claim and return AgentResponse format.
     """
+    # Validate team key
+    team_name = validate_team_key(team_key)
+    if not team_name:
+        raise HTTPException(status_code=401, detail="Invalid team key. Please use the key provided to your team.")
+    
     if challenge_id not in ["factcheck", "legal"]:
         raise HTTPException(status_code=400, detail="Invalid challenge ID")
     
@@ -89,13 +118,13 @@ async def submit_api_endpoint(
     return SubmissionResponse(
         submission_id=submission.id,
         status="pending",
-        message="Submission received. Evaluation will begin shortly."
+        message=f"Submission received for team '{team_name}'. Evaluation will begin shortly."
     )
 
 
 @router.post("/python-file", response_model=SubmissionResponse)
 async def submit_python_file(
-    team_name: str = Form(...),
+    team_key: str = Form(...),
     challenge_id: str = Form(...),
     file: UploadFile = File(...),
     background_tasks: BackgroundTasks = None,
@@ -105,6 +134,11 @@ async def submit_python_file(
     Submit a Python file for evaluation.
     The file should contain a `solve(query: str, search_api_url: str) -> dict` function.
     """
+    # Validate team key
+    team_name = validate_team_key(team_key)
+    if not team_name:
+        raise HTTPException(status_code=401, detail="Invalid team key. Please use the key provided to your team.")
+    
     if challenge_id not in ["factcheck", "legal"]:
         raise HTTPException(status_code=400, detail="Invalid challenge ID")
     
@@ -155,7 +189,7 @@ async def submit_python_file(
     return SubmissionResponse(
         submission_id=submission.id,
         status="pending",
-        message="Submission received. Evaluation will begin shortly."
+        message=f"Submission received for team '{team_name}'. Evaluation will begin shortly."
     )
 
 
@@ -262,9 +296,14 @@ async def get_submission_details(submission_id: int, db: Session = Depends(get_d
     return result
 
 
-@router.get("/team/{team_name}")
-async def get_team_submissions(team_name: str, db: Session = Depends(get_db)):
-    """Get all submissions for a team with feedback."""
+@router.get("/team/{team_key}")
+async def get_team_submissions(team_key: str, db: Session = Depends(get_db)):
+    """Get all submissions for a team with feedback. Requires team key."""
+    # Validate team key
+    team_name = validate_team_key(team_key)
+    if not team_name:
+        raise HTTPException(status_code=401, detail="Invalid team key.")
+    
     submissions = db.query(Submission).filter(
         Submission.team_name == team_name
     ).order_by(Submission.created_at.desc()).all()

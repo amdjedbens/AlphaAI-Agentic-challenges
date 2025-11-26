@@ -9,7 +9,10 @@ function SubmitForm() {
   const preselectedChallenge = searchParams.get('challenge');
 
   const [submissionType, setSubmissionType] = useState<'api' | 'python'>('api');
-  const [teamName, setTeamName] = useState('');
+  const [teamKey, setTeamKey] = useState('');
+  const [teamName, setTeamName] = useState<string | null>(null);
+  const [isValidatingKey, setIsValidatingKey] = useState(false);
+  const [keyError, setKeyError] = useState<string | null>(null);
   const [challengeId, setChallengeId] = useState(preselectedChallenge || 'factcheck');
   const [apiUrl, setApiUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -26,6 +29,47 @@ function SubmitForm() {
     }
   }, [preselectedChallenge]);
 
+  // Validate team key when it changes (with debounce)
+  useEffect(() => {
+    if (!teamKey || teamKey.length < 8) {
+      setTeamName(null);
+      setKeyError(null);
+      return;
+    }
+
+    const validateKey = async () => {
+      setIsValidatingKey(true);
+      setKeyError(null);
+      try {
+        const formData = new FormData();
+        formData.append('team_key', teamKey);
+        
+        const response = await fetch('http://localhost:8006/api/submissions/validate-key', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          setTeamName(data.team_name);
+          setKeyError(null);
+        } else {
+          setTeamName(null);
+          setKeyError(data.detail || 'Invalid key');
+        }
+      } catch {
+        setTeamName(null);
+        setKeyError('Could not validate key');
+      } finally {
+        setIsValidatingKey(false);
+      }
+    };
+
+    const timer = setTimeout(validateKey, 500);
+    return () => clearTimeout(timer);
+  }, [teamKey]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -33,7 +77,7 @@ function SubmitForm() {
 
     try {
       const formData = new FormData();
-      formData.append('team_name', teamName);
+      formData.append('team_key', teamKey);
       formData.append('challenge_id', challengeId);
 
       let endpoint = '';
@@ -163,17 +207,54 @@ def solve(query: str, search_api_url: str) -> dict:
             <h2 className="text-xl font-bold text-white">Submission Details</h2>
           </div>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Team Name */}
+            {/* Team Key */}
             <div>
-              <label className="block text-sm font-medium text-white/80 mb-2">Team Name</label>
-              <input
-                type="text"
-                value={teamName}
-                onChange={(e) => setTeamName(e.target.value)}
-                required
-                placeholder="Enter your team name"
-                className="w-full px-4 py-3 rounded-xl"
-              />
+              <label className="block text-sm font-medium text-white/80 mb-2">Team Key</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={teamKey}
+                  onChange={(e) => setTeamKey(e.target.value)}
+                  required
+                  placeholder="Enter your team key"
+                  className={`w-full px-4 py-3 rounded-xl pr-10 ${
+                    teamName ? 'border-emerald-500/50' : keyError ? 'border-red-500/50' : ''
+                  }`}
+                />
+                {isValidatingKey && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <svg className="animate-spin w-5 h-5 text-white/40" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                  </div>
+                )}
+                {!isValidatingKey && teamName && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+                {!isValidatingKey && keyError && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <svg className="w-5 h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              {teamName && (
+                <p className="text-sm text-emerald-400 mt-2 flex items-center gap-1">
+                  <span>✓</span> Team: <span className="font-semibold">{teamName}</span>
+                </p>
+              )}
+              {keyError && (
+                <p className="text-sm text-red-400 mt-2">{keyError}</p>
+              )}
+              <p className="text-sm text-white/40 mt-2">
+                Use the unique key provided to your team.
+              </p>
             </div>
 
             {/* Challenge Selection */}
@@ -226,7 +307,7 @@ def solve(query: str, search_api_url: str) -> dict:
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !teamName}
               className="w-full btn-primary py-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (

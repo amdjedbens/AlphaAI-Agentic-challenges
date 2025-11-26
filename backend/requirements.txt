@@ -1,14 +1,28 @@
+# Core FastAPI
 fastapi==0.109.0
 uvicorn==0.27.0
-chromadb==0.4.22
-sentence-transformers==2.7.0
-transformers>=4.41.0,<5.0.0
-huggingface-hub>=0.23.2,<1.0
-openai==1.12.0
 pydantic==2.6.0
 python-multipart==0.0.9
 httpx==0.26.0
+
+# Database
 sqlalchemy==2.0.25
+
+# Environment
 python-dotenv==1.0.1
-torch>=2.0.0
+
+# Vector store
+chromadb==0.4.22
+
+# ML - CPU only (much smaller than full PyTorch)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.0+cpu
+sentence-transformers==2.7.0
+transformers>=4.41.0,<5.0.0
+huggingface-hub>=0.23.2,<1.0
+
+# OpenAI for evaluation
+openai==1.12.0
+
+# Numpy (compatible version)
 numpy<2.0.0
