@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 
+// API base URL from environment or default to localhost
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8006';
+
 interface LeaderboardEntry {
   rank: number;
   team_name: string;
@@ -9,23 +12,6 @@ interface LeaderboardEntry {
   submission_count: number;
   last_submission: string;
 }
-
-// Mock data for demonstration (when backend is not running)
-const mockLeaderboard: Record<string, LeaderboardEntry[]> = {
-  factcheck: [
-    { rank: 1, team_name: 'Neural Ninjas', best_score: 9.2, submission_count: 5, last_submission: '2025-11-25T10:30:00Z' },
-    { rank: 2, team_name: 'RAG Masters', best_score: 8.8, submission_count: 3, last_submission: '2025-11-24T15:45:00Z' },
-    { rank: 3, team_name: 'Vector Voyagers', best_score: 8.5, submission_count: 7, last_submission: '2025-11-25T09:00:00Z' },
-    { rank: 4, team_name: 'Embedding Eagles', best_score: 8.1, submission_count: 2, last_submission: '2025-11-23T14:20:00Z' },
-    { rank: 5, team_name: 'Context Crusaders', best_score: 7.9, submission_count: 4, last_submission: '2025-11-24T18:30:00Z' },
-  ],
-  legal: [
-    { rank: 1, team_name: 'Law & LLMs', best_score: 8.7, submission_count: 4, last_submission: '2025-11-25T11:00:00Z' },
-    { rank: 2, team_name: 'Clause Crawlers', best_score: 8.3, submission_count: 6, last_submission: '2025-11-24T20:15:00Z' },
-    { rank: 3, team_name: 'Neural Ninjas', best_score: 7.9, submission_count: 3, last_submission: '2025-11-25T08:45:00Z' },
-    { rank: 4, team_name: 'Zoning Zealots', best_score: 7.5, submission_count: 2, last_submission: '2025-11-23T16:30:00Z' },
-  ],
-};
 
 export default function LeaderboardPage() {
   const [selectedChallenge, setSelectedChallenge] = useState('factcheck');
@@ -43,19 +29,19 @@ export default function LeaderboardPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:8006/api/evaluation/leaderboard/${challengeId}?limit=50`
+        `${API_BASE_URL}/api/evaluation/leaderboard/${challengeId}?limit=50`
       );
 
       if (response.ok) {
         const data = await response.json();
         setLeaderboard(data);
       } else {
-        // Use mock data if backend is not available
-        setLeaderboard(mockLeaderboard[challengeId] || []);
+        setError('Failed to load leaderboard');
+        setLeaderboard([]);
       }
     } catch {
-      // Use mock data if backend is not available
-      setLeaderboard(mockLeaderboard[challengeId] || []);
+      setError('Could not connect to server');
+      setLeaderboard([]);
     } finally {
       setIsLoading(false);
     }

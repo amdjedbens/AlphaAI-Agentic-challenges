@@ -2,6 +2,9 @@ import Link from 'next/link';
 import { CodeBlock } from '@/components/CodeBlock';
 import { notFound } from 'next/navigation';
 
+// API base URL for display
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8006';
+
 // Challenge data
 const challengeData: Record<string, {
   id: string;
@@ -181,7 +184,7 @@ export default async function ChallengePage({ params }: { params: Promise<{ id: 
             </p>
             <div className="code-block flex items-center gap-3">
               <code className="text-[var(--accent-cyan)] font-bold">POST</code>
-              <code className="text-white">http://localhost:8006{challenge.kb_endpoint}</code>
+              <code className="text-white">{API_BASE_URL}{challenge.kb_endpoint}</code>
             </div>
           </div>
 
