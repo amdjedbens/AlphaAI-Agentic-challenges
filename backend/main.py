@@ -31,7 +31,13 @@ app = FastAPI(
 # CORS middleware for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000", 
+        "http://127.0.0.1:3000",
+        "https://whale-app-x8ze8.ondigitalocean.app",  # Production frontend
+        "https://squid-app-7q77b.ondigitalocean.app",  # Production backend
+        "*"  # Allow all origins for the hackathon
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

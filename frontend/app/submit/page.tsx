@@ -4,6 +4,9 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { CodeBlock } from '@/components/CodeBlock';
 
+// API base URL from environment or default to localhost
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8006';
+
 function SubmitForm() {
   const searchParams = useSearchParams();
   const preselectedChallenge = searchParams.get('challenge');
@@ -44,7 +47,7 @@ function SubmitForm() {
         const formData = new FormData();
         formData.append('team_key', teamKey);
         
-        const response = await fetch('http://localhost:8006/api/submissions/validate-key', {
+        const response = await fetch(`${API_BASE_URL}/api/submissions/validate-key`, {
           method: 'POST',
           body: formData,
         });
@@ -83,12 +86,12 @@ function SubmitForm() {
       let endpoint = '';
       if (submissionType === 'api') {
         formData.append('api_url', apiUrl);
-        endpoint = 'http://localhost:8006/api/submissions/api-endpoint';
+        endpoint = `${API_BASE_URL}/api/submissions/api-endpoint`;
       } else {
         if (file) {
           formData.append('file', file);
         }
-        endpoint = 'http://localhost:8006/api/submissions/python-file';
+        endpoint = `${API_BASE_URL}/api/submissions/python-file`;
       }
 
       const response = await fetch(endpoint, {
@@ -160,7 +163,7 @@ def solve(query: str, search_api_url: str) -> dict:
   "claim": "The claim to verify",  // for factcheck
   // OR
   "query": "The question to answer",  // for legal
-  "kb_search_url": "http://localhost:8006/api/kb/{challenge}/search"
+  "kb_search_url": "${API_BASE_URL}/api/kb/{challenge}/search"
 }
 
 // And return:

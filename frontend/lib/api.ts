@@ -92,12 +92,12 @@ export async function searchKnowledgeBase(
 }
 
 export async function submitApiEndpoint(
-  teamName: string,
+  teamKey: string,
   challengeId: string,
   apiUrl: string
 ): Promise<SubmissionResult> {
   const formData = new FormData();
-  formData.append('team_name', teamName);
+  formData.append('team_key', teamKey);
   formData.append('challenge_id', challengeId);
   formData.append('api_url', apiUrl);
 
@@ -110,12 +110,12 @@ export async function submitApiEndpoint(
 }
 
 export async function submitPythonFile(
-  teamName: string,
+  teamKey: string,
   challengeId: string,
   file: File
 ): Promise<SubmissionResult> {
   const formData = new FormData();
-  formData.append('team_name', teamName);
+  formData.append('team_key', teamKey);
   formData.append('challenge_id', challengeId);
   formData.append('file', file);
 
@@ -124,6 +124,18 @@ export async function submitPythonFile(
     body: formData,
   });
   if (!res.ok) throw new Error('Failed to submit Python file');
+  return res.json();
+}
+
+export async function validateTeamKey(teamKey: string): Promise<{ valid: boolean; team_name: string }> {
+  const formData = new FormData();
+  formData.append('team_key', teamKey);
+  
+  const res = await fetch(`${API_BASE_URL}/api/submissions/validate-key`, {
+    method: 'POST',
+    body: formData,
+  });
+  if (!res.ok) throw new Error('Invalid team key');
   return res.json();
 }
 
