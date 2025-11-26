@@ -2,6 +2,9 @@ import Link from 'next/link';
 import type { Challenge } from '@/lib/api';
 import React from 'react';
 
+// 🔒 CHALLENGE LOCK: Set to false when competition starts
+const CHALLENGES_LOCKED = true;
+
 interface ChallengeCardProps {
   challenge: Challenge;
 }
@@ -58,15 +61,34 @@ export function ChallengeCard({ challenge }: ChallengeCardProps) {
 
         <div className="border-t border-[var(--accent-cyan)]/10 pt-4 mt-auto">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-white/40">
-              {challenge.sample_questions} sample / {challenge.total_questions} total questions
-            </span>
-            <span className="text-[var(--accent-cyan)] font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-              View Challenge
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </span>
+            {CHALLENGES_LOCKED ? (
+              <>
+                <span className="text-amber-400/80 flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  Unlocks Nov 27
+                </span>
+                <span className="text-white/40 font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                  Preview
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="text-white/40">
+                  {challenge.sample_questions} sample / {challenge.total_questions} total questions
+                </span>
+                <span className="text-[var(--accent-cyan)] font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                  View Challenge
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>

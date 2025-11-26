@@ -5,6 +5,9 @@ import { notFound } from 'next/navigation';
 // Production API URL (hardcoded for hackathon)
 const API_BASE_URL = 'https://squid-app-7q77b.ondigitalocean.app/api';
 
+// 🔒 CHALLENGE LOCK: Set to false when competition starts to reveal details
+const CHALLENGES_LOCKED = true;
+
 // Challenge data
 const challengeData: Record<string, {
   id: string;
@@ -99,6 +102,75 @@ export default async function ChallengePage({ params }: { params: Promise<{ id: 
     Hard: 'badge-hard',
   }[challenge.difficulty] || 'badge-beginner';
 
+  // 🔒 LOCKED STATE - Show coming soon page
+  if (CHALLENGES_LOCKED) {
+    return (
+      <div className="min-h-screen py-12" style={{ background: 'linear-gradient(180deg, #0b0f2b 0%, rgba(19, 37, 98, 1) 50%, rgba(43, 71, 176, 1) 100%)' }}>
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Breadcrumb */}
+          <nav className="mb-8">
+            <Link href="/challenges" className="text-white/40 hover:text-[var(--accent-cyan)] transition-colors flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to Challenges
+            </Link>
+          </nav>
+
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <span className={`badge ${difficultyClass}`}>{challenge.difficulty}</span>
+              <span className="text-white/40">{challenge.theme}</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black text-white mb-4">{challenge.name}</h1>
+            <p className="text-xl text-white/60">{challenge.description}</p>
+          </div>
+
+          {/* Locked Card */}
+          <div className="card p-12 text-center">
+            <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-gradient-to-br from-[var(--accent-cyan)]/20 to-[var(--accent-purple)]/20 flex items-center justify-center">
+              <svg className="w-12 h-12 text-[var(--accent-cyan)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            
+            <h2 className="text-3xl font-bold text-white mb-4">Challenge Locked</h2>
+            <p className="text-white/60 text-lg mb-8 max-w-md mx-auto">
+              This challenge will be unlocked when the competition begins. 
+              Get ready to build your RAG agent!
+            </p>
+
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[var(--accent-cyan)]/10 border border-[var(--accent-cyan)]/30">
+              <svg className="w-5 h-5 text-[var(--accent-cyan)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-[var(--accent-cyan)] font-semibold">Competition starts November 27, 2025</span>
+            </div>
+
+            <div className="mt-12 pt-8 border-t border-[var(--accent-cyan)]/10">
+              <h3 className="font-bold text-white mb-4">What to expect:</h3>
+              <ul className="text-white/60 space-y-2">
+                <li>• Knowledge Base API access</li>
+                <li>• Sample questions for testing</li>
+                <li>• Expected output format</li>
+                <li>• Evaluation criteria</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Back Button */}
+          <div className="flex justify-center mt-8">
+            <Link href="/challenges" className="btn-secondary text-center px-8 py-4">
+              View All Challenges
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 🔓 UNLOCKED STATE - Show full challenge details
   return (
     <div className="min-h-screen py-12" style={{ background: 'linear-gradient(180deg, #0b0f2b 0%, rgba(19, 37, 98, 1) 50%, rgba(43, 71, 176, 1) 100%)' }}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
