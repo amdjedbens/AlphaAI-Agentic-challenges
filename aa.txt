@@ -1,4 +1,3 @@
-https://squid-app-7q77b.ondigitalocean.app/api/api/public/leaderboard/v2
 {
   "factcheck": {
     "public": [
