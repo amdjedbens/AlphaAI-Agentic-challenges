@@ -11,6 +11,8 @@ from typing import Optional
 from db.database import SessionLocal, Submission, EvaluationResult, LeaderboardEntry
 
 
+# This is the EXACT data that should be in the database
+# From aa.txt - DO NOT modify unless you want to change initial state
 INITIAL_DATA = {
     "factcheck": {
         "public": [
@@ -34,6 +36,12 @@ INITIAL_DATA = {
         "private": []
     }
 }
+
+# Expected result after seeding:
+# - 1 team: "data-divas" 
+# - 1 submission: id=2, factcheck challenge
+# - Public score: 0.00000
+# - Private score: 1.33333
 
 
 def parse_score(score_str: str) -> float:
