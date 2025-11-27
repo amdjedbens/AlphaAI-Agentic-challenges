@@ -27,6 +27,7 @@ def get_openai_client():
 # Private: Hidden until competition ends (~60-70% of questions)
 
 # ==================== FACTCHECK CHALLENGE ====================
+# ==================== FACTCHECK CHALLENGE ====================
 FACTCHECK_PUBLIC_ANSWERS = {
     # PUBLIC TEST SET - scores visible during competition
     "fc_test_1": {
@@ -43,17 +44,17 @@ FACTCHECK_PUBLIC_ANSWERS = {
         "key_facts": ["born 1879", "German-born", "Ulm"],
         "is_public": True
     },
-}
-
-FACTCHECK_PRIVATE_ANSWERS = {
-    # PRIVATE TEST SET - scores revealed only at end
     "fc_test_3": {
         "claim": "The Great Wall of China is visible from the Moon with the naked eye.",
         "expected_verdict": "False",
         "expected_doc_ids": ["wiki_great_wall"],
         "key_facts": ["NOT visible", "myth debunked", "too narrow"],
-        "is_public": False
+        "is_public": True
     },
+}
+
+FACTCHECK_PRIVATE_ANSWERS = {
+    # PRIVATE TEST SET - scores revealed only at end
     "fc_test_4": {
         "claim": "Water boils at 100 degrees Celsius at sea level.",
         "expected_verdict": "True",
@@ -84,17 +85,17 @@ LEGAL_PUBLIC_ANSWERS = {
         "key_reasoning": ["conflict between clauses", "near R-1 boundary limits to 2 stories", "otherwise 4 stories allowed"],
         "is_public": True
     },
-}
-
-LEGAL_PRIVATE_ANSWERS = {
-    # PRIVATE TEST SET - scores revealed only at end
     "legal_test_2": {
         "query": "What is the maximum lot coverage allowed in Zone A-Commercial?",
         "expected_answer": "80%",
         "expected_clause_ids": ["clause_A_3"],
         "key_reasoning": ["80% maximum", "10% must be green space"],
-        "is_public": False
+        "is_public": True
     },
+}
+
+LEGAL_PRIVATE_ANSWERS = {
+    # PRIVATE TEST SET - scores revealed only at end
     "legal_test_3": {
         "query": "Can I operate a home-based bakery in Zone R-1?",
         "expected_answer": "Conditionally yes",

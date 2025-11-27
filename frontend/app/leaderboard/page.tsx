@@ -5,57 +5,62 @@ import { useState, useEffect } from 'react';
 // Production API URL (hardcoded for hackathon)
 const API_BASE_URL = 'https://squid-app-7q77b.ondigitalocean.app/api';
 
-interface LeaderboardEntry {
+interface PublicLeaderboardEntry {
+  teamId: number;
+  teamName: string;
+  displayScore: string;
+}
+
+interface PrivateLeaderboardEntry {
+  teamId: number;
+  submissionId: number;
   rank: number;
-  team_name: string;
-  best_score: number;
-  submission_count: number;
-  last_submission: string;
+  displayScore: string;
+}
+
+interface ChallengeLeaderboard {
+  public: PublicLeaderboardEntry[];
+  private: PrivateLeaderboardEntry[];
+}
+
+interface LeaderboardResponse {
+  [key: string]: ChallengeLeaderboard;
 }
 
 export default function LeaderboardPage() {
   const [selectedChallenge, setSelectedChallenge] = useState('factcheck');
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchLeaderboard(selectedChallenge);
-  }, [selectedChallenge]);
+    fetchLeaderboard();
+  }, []);
 
-  const fetchLeaderboard = async (challengeId: string) => {
+  const fetchLeaderboard = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
+      // Using v2 endpoint which returns both challenges
       const response = await fetch(
-        `${API_BASE_URL}/api/evaluation/leaderboard/${challengeId}?limit=50`
+        `${API_BASE_URL}/api/public/leaderboard/v2`
       );
 
       if (response.ok) {
         const data = await response.json();
-        setLeaderboard(data);
+        setLeaderboardData(data);
       } else {
         setError('Failed to load leaderboard');
-        setLeaderboard([]);
       }
     } catch {
       setError('Could not connect to server');
-      setLeaderboard([]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
+  const currentLeaderboard = leaderboardData ? leaderboardData[selectedChallenge]?.public || [] : [];
 
   const getRankStyle = (rank: number) => {
     switch (rank) {
@@ -103,21 +108,19 @@ export default function LeaderboardPage() {
         <div className="card p-2 mb-8 inline-flex w-full">
           <button
             onClick={() => setSelectedChallenge('factcheck')}
-            className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all duration-300 ${
-              selectedChallenge === 'factcheck'
+            className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all duration-300 ${selectedChallenge === 'factcheck'
                 ? 'bg-gradient-to-r from-[var(--accent-cyan)] to-[#00d9c7] text-[#0b0f2b]'
                 : 'text-white/60 hover:text-white hover:bg-white/5'
-            }`}
+              }`}
           >
             <span className="hidden sm:inline">The </span>Fact-Check Spider
           </button>
           <button
             onClick={() => setSelectedChallenge('legal')}
-            className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all duration-300 ${
-              selectedChallenge === 'legal'
+            className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all duration-300 ${selectedChallenge === 'legal'
                 ? 'bg-gradient-to-r from-[var(--accent-cyan)] to-[#00d9c7] text-[#0b0f2b]'
                 : 'text-white/60 hover:text-white hover:bg-white/5'
-            }`}
+              }`}
           >
             <span className="hidden sm:inline">The </span>Legal Clerk
           </button>
@@ -137,7 +140,7 @@ export default function LeaderboardPage() {
             <div className="p-12 text-center">
               <p className="text-red-400">{error}</p>
             </div>
-          ) : leaderboard.length === 0 ? (
+          ) : currentLeaderboard.length === 0 ? (
             <div className="p-12 text-center">
               <svg className="w-16 h-16 mx-auto text-white/20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -150,41 +153,34 @@ export default function LeaderboardPage() {
                 <tr className="border-b border-[var(--accent-cyan)]/10 bg-[#0b0f2b]/50">
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white/40">Rank</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white/40">Team</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-white/40">Score</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-white/40 hidden sm:table-cell">Submissions</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-white/40 hidden md:table-cell">Last Active</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-white/40">Public Score</th>
                 </tr>
               </thead>
               <tbody>
-                {leaderboard.map((entry) => (
-                  <tr
-                    key={`${entry.team_name}-${entry.rank}`}
-                    className="border-b border-[var(--accent-cyan)]/10 hover:bg-[var(--accent-cyan)]/5 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold border ${getRankStyle(entry.rank)}`}>
-                        {getRankIcon(entry.rank) || entry.rank}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-semibold text-white">{entry.team_name}</span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="text-xl font-bold text-[var(--accent-cyan)]">
-                        {entry.best_score.toFixed(1)}
-                      </span>
-                      <span className="text-white/40">/10</span>
-                    </td>
-                    <td className="px-6 py-4 text-right hidden sm:table-cell">
-                      <span className="text-white/60">{entry.submission_count}</span>
-                    </td>
-                    <td className="px-6 py-4 text-right hidden md:table-cell">
-                      <span className="text-white/40 text-sm">
-                        {formatDate(entry.last_submission)}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {currentLeaderboard.map((entry, index) => {
+                  const rank = index + 1;
+                  return (
+                    <tr
+                      key={`${entry.teamName}-${rank}`}
+                      className="border-b border-[var(--accent-cyan)]/10 hover:bg-[var(--accent-cyan)]/5 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold border ${getRankStyle(rank)}`}>
+                          {getRankIcon(rank) || rank}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="font-semibold text-white">{entry.teamName}</span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <span className="text-xl font-bold text-[var(--accent-cyan)]">
+                          {parseFloat(entry.displayScore).toFixed(4)}
+                        </span>
+                        <span className="text-white/40">/10</span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}
