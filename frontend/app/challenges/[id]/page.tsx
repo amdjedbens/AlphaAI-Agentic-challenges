@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 const API_BASE_URL = 'https://squid-app-7q77b.ondigitalocean.app/api';
 
 // 🔒 CHALLENGE LOCK: Set to false when competition starts to reveal details
-const CHALLENGES_LOCKED = true;
+const CHALLENGES_LOCKED = false;
 
 // Challenge data
 const challengeData: Record<string, {
@@ -250,14 +250,22 @@ export default async function ChallengePage({ params }: { params: Promise<{ id: 
             </svg>
             <h2 className="text-2xl font-bold text-white">Knowledge Base API</h2>
           </div>
-          <div className="mb-6">
-            <p className="text-white/60 mb-4">
-              Use this endpoint to search the knowledge base:
-            </p>
-            <div className="code-block flex items-center gap-3">
-              <code className="text-[var(--accent-cyan)] font-bold">POST</code>
-              <code className="text-white">{API_BASE_URL}{challenge.kb_endpoint}</code>
+          
+          {/* Highlighted KB URL */}
+          <div className="mb-6 p-6 rounded-xl bg-gradient-to-r from-[var(--accent-cyan)]/10 to-[var(--accent-purple)]/10 border-2 border-[var(--accent-cyan)]/40">
+            <div className="flex items-center gap-2 mb-3">
+              <svg className="w-5 h-5 text-[var(--accent-cyan)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span className="text-[var(--accent-cyan)] font-bold text-sm uppercase tracking-wide">Your KB Search Endpoint</span>
             </div>
+            <div className="flex items-center gap-3 p-4 rounded-lg bg-[#0b0f2b] border border-[var(--accent-cyan)]/20">
+              <code className="text-[var(--accent-cyan)] font-bold text-lg">POST</code>
+              <code className="text-white font-mono text-lg break-all">{API_BASE_URL}{challenge.kb_endpoint}</code>
+            </div>
+            <p className="text-white/50 text-sm mt-3">
+              💡 <strong className="text-white/70">Note:</strong> This URL is automatically passed to your <code className="text-[var(--accent-cyan)]">/solve</code> endpoint as <code className="text-[var(--accent-cyan)]">kb_search_url</code> during evaluation.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">

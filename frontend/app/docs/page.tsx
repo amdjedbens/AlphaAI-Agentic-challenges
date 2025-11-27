@@ -261,8 +261,78 @@ const expectedOutputFormat = `{
   "citation": "doc_id_1: 'The relevant quote from the document...'"
 }`;
 
+// Collapsible section component
+function CollapsibleSection({ 
+  id, 
+  title, 
+  badge, 
+  badgeColor = 'cyan',
+  isOpen, 
+  onToggle, 
+  children 
+}: { 
+  id: string;
+  title: string;
+  badge?: string;
+  badgeColor?: 'cyan' | 'purple' | 'magenta' | 'emerald';
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) {
+  const colorClasses = {
+    cyan: 'bg-[var(--accent-cyan)]/20 text-[var(--accent-cyan)]',
+    purple: 'bg-[var(--accent-purple)]/20 text-[var(--accent-purple)]',
+    magenta: 'bg-[var(--accent-magenta)]/20 text-[var(--accent-magenta)]',
+    emerald: 'bg-emerald-500/20 text-emerald-400',
+  };
+
+  return (
+    <section className="card mb-8 overflow-hidden" id={id}>
+      <button
+        onClick={onToggle}
+        className="w-full p-6 flex items-center justify-between hover:bg-white/5 transition-colors"
+      >
+        <h2 className="text-xl font-bold text-white flex items-center gap-3">
+          {badge && (
+            <span className={`w-8 h-8 rounded-lg ${colorClasses[badgeColor]} flex items-center justify-center text-sm font-bold`}>
+              {badge}
+            </span>
+          )}
+          {title}
+        </h2>
+        <svg 
+          className={`w-6 h-6 text-white/40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+        <div className="px-6 pb-6">
+          {children}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function DocsPage() {
   const [activeFramework, setActiveFramework] = useState<Framework>('agno');
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    howItWorks: true,
+    framework: false,
+    exposeApi: false,
+    ngrok: false,
+    output: false,
+    requirements: false,
+    learnMore: false,
+  });
+
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
 
   return (
     <div className="min-h-screen py-12" style={{ background: 'linear-gradient(180deg, #0b0f2b 0%, rgba(19, 37, 98, 1) 50%, rgba(43, 71, 176, 1) 100%)' }}>
@@ -280,17 +350,35 @@ export default function DocsPage() {
           <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
             Build Your <span className="gradient-text">RAG Agent</span>
           </h1>
-          <p className="text-xl text-white/60 max-w-2xl mx-auto">
+          <p className="text-xl text-white/60 max-w-2xl mx-auto mb-6">
             Get started in minutes. Pick a framework, grab the starter code, and build your solution.
           </p>
+          
+          {/* Expand/Collapse All Button */}
+          <button
+            onClick={() => {
+              const allOpen = Object.values(expandedSections).every(v => v);
+              const newState = Object.keys(expandedSections).reduce((acc, key) => ({ ...acc, [key]: !allOpen }), {});
+              setExpandedSections(newState);
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-white/30 transition-colors text-sm"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            {Object.values(expandedSections).every(v => v) ? 'Collapse All Sections' : 'Expand All Sections'}
+          </button>
         </div>
 
         {/* How It Works */}
-        <section className="card p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <span className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/20 flex items-center justify-center text-[var(--accent-cyan)] text-sm font-bold">1</span>
-            How It Works
-          </h2>
+        <CollapsibleSection
+          id="how-it-works"
+          title="How It Works"
+          badge="1"
+          badgeColor="cyan"
+          isOpen={expandedSections.howItWorks}
+          onToggle={() => toggleSection('howItWorks')}
+        >
           <div className="grid md:grid-cols-3 gap-6">
             <div className="p-4 rounded-xl bg-[#0b0f2b]/50 border border-[var(--accent-cyan)]/10">
               <div className="w-10 h-10 rounded-full bg-[var(--accent-cyan)]/10 flex items-center justify-center mb-3">
@@ -320,15 +408,94 @@ export default function DocsPage() {
               <p className="text-white/50 text-sm">Return a structured response with your answer, citations, and reasoning.</p>
             </div>
           </div>
+        </CollapsibleSection>
+
+        {/* Knowledge Base API URLs - HIGHLIGHTED */}
+        <section className="card p-8 mb-8 border-2 border-[var(--accent-cyan)]/40 bg-gradient-to-br from-[var(--accent-cyan)]/5 to-[var(--accent-purple)]/5">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-full bg-[var(--accent-cyan)]/20 flex items-center justify-center">
+              <svg className="w-6 h-6 text-[var(--accent-cyan)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Knowledge Base API URLs</h2>
+              <p className="text-[var(--accent-cyan)] text-sm font-medium">Use these endpoints to search for relevant documents</p>
+            </div>
+          </div>
+
+          <div className="space-y-4 mb-6">
+            {/* Factcheck KB */}
+            <div className="p-4 rounded-xl bg-[#0b0f2b] border border-[var(--accent-cyan)]/20">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-2 py-1 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400">FACTCHECK</span>
+                <span className="text-white/40 text-sm">The Fact-Check Spider</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <code className="text-[var(--accent-cyan)] font-bold">POST</code>
+                <code className="text-white font-mono text-sm md:text-base break-all select-all">https://squid-app-7q77b.ondigitalocean.app/api/kb/factcheck/search</code>
+              </div>
+            </div>
+
+            {/* Legal KB */}
+            <div className="p-4 rounded-xl bg-[#0b0f2b] border border-[var(--accent-purple)]/20">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-2 py-1 rounded text-xs font-bold bg-amber-500/20 text-amber-400">LEGAL</span>
+                <span className="text-white/40 text-sm">The Legal Clerk</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <code className="text-[var(--accent-cyan)] font-bold">POST</code>
+                <code className="text-white font-mono text-sm md:text-base break-all select-all">https://squid-app-7q77b.ondigitalocean.app/api/kb/legal/search</code>
+              </div>
+            </div>
+          </div>
+
+          {/* Request/Response Example */}
+          <div className="grid md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <h4 className="text-white font-semibold mb-2 text-sm">Request Body</h4>
+              <CodeBlock
+                code={`{
+  "query": "your search query",
+  "top_k": 5
+}`}
+                language="json"
+              />
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-2 text-sm">Response</h4>
+              <CodeBlock
+                code={`{
+  "results": [
+    { "doc_id": "doc_1", "content": "...", "score": 0.95 }
+  ]
+}`}
+                language="json"
+              />
+            </div>
+          </div>
+
+          <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+            <p className="text-emerald-400 text-sm flex items-start gap-2">
+              <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>
+                <strong>Good news:</strong> During evaluation, the platform automatically passes the correct <code className="bg-emerald-500/20 px-1.5 py-0.5 rounded">kb_search_url</code> to your <code className="bg-emerald-500/20 px-1.5 py-0.5 rounded">/solve</code> endpoint. You don&apos;t need to hardcode these URLs!
+              </span>
+            </p>
+          </div>
         </section>
 
         {/* Framework Selection */}
-        <section className="card p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <span className="w-8 h-8 rounded-lg bg-[var(--accent-purple)]/20 flex items-center justify-center text-[var(--accent-purple)] text-sm font-bold">2</span>
-            Pick Your Framework
-          </h2>
-          
+        <CollapsibleSection
+          id="framework"
+          title="Pick Your Framework"
+          badge="2"
+          badgeColor="purple"
+          isOpen={expandedSections.framework}
+          onToggle={() => toggleSection('framework')}
+        >
           <div className="flex gap-4 mb-6">
             <button
               onClick={() => setActiveFramework('agno')}
@@ -380,14 +547,17 @@ export default function DocsPage() {
               function is your entry point. The platform calls it with the query and KB API URL.
             </p>
           </div>
-        </section>
+        </CollapsibleSection>
 
         {/* API Server */}
-        <section className="card p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <span className="w-8 h-8 rounded-lg bg-[var(--accent-magenta)]/20 flex items-center justify-center text-[var(--accent-magenta)] text-sm font-bold">3</span>
-            Expose as API
-          </h2>
+        <CollapsibleSection
+          id="expose-api"
+          title="Expose as API"
+          badge="3"
+          badgeColor="magenta"
+          isOpen={expandedSections.exposeApi}
+          onToggle={() => toggleSection('exposeApi')}
+        >
           <p className="text-white/60 mb-4">
             Wrap your solution in a FastAPI server so the platform can call it:
           </p>
@@ -399,14 +569,17 @@ export default function DocsPage() {
               <code className="text-white bg-white/10 px-2 py-0.5 rounded">python server.py --port 8100</code>
             </p>
           </div>
-        </section>
+        </CollapsibleSection>
 
         {/* Expose to Internet with ngrok */}
-        <section className="card p-8 mb-8" id="ngrok-setup">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <span className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-sm font-bold">3.5</span>
-            Expose Your Local Server to the Internet
-          </h2>
+        <CollapsibleSection
+          id="ngrok-setup"
+          title="Expose Your Local Server to the Internet"
+          badge="3.5"
+          badgeColor="emerald"
+          isOpen={expandedSections.ngrok}
+          onToggle={() => toggleSection('ngrok')}
+        >
           <p className="text-white/60 mb-4">
             Since your server runs locally, you need to expose it to the internet so our platform can reach it. 
             We recommend using <a href="https://ngrok.com" target="_blank" rel="noopener noreferrer" className="text-[var(--accent-cyan)] hover:underline font-semibold">ngrok</a> (free tier works fine!).
@@ -511,14 +684,17 @@ export default function DocsPage() {
               </div>
             </div>
           </div>
-        </section>
+        </CollapsibleSection>
 
         {/* Expected Output */}
-        <section className="card p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <span className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/20 flex items-center justify-center text-[var(--accent-cyan)] text-sm font-bold">4</span>
-            Expected Output Format
-          </h2>
+        <CollapsibleSection
+          id="output"
+          title="Expected Output Format"
+          badge="4"
+          badgeColor="cyan"
+          isOpen={expandedSections.output}
+          onToggle={() => toggleSection('output')}
+        >
           <p className="text-white/60 mb-4">
             Your <code className="text-[var(--accent-cyan)]">solve()</code> function must return this exact structure:
           </p>
@@ -542,15 +718,17 @@ export default function DocsPage() {
               <span className="text-white/50 text-sm">Quote the relevant text with the source doc_id.</span>
             </div>
           </div>
-        </section>
+        </CollapsibleSection>
 
         {/* Requirements */}
-        <section className="card p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <span className="w-8 h-8 rounded-lg bg-[var(--accent-purple)]/20 flex items-center justify-center text-[var(--accent-purple)] text-sm font-bold">5</span>
-            Requirements
-          </h2>
-          
+        <CollapsibleSection
+          id="requirements"
+          title="Requirements"
+          badge="5"
+          badgeColor="purple"
+          isOpen={expandedSections.requirements}
+          onToggle={() => toggleSection('requirements')}
+        >
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h3 className="font-semibold text-white mb-3">For Agno</h3>
@@ -585,11 +763,15 @@ python-dotenv`}
               <span className="font-semibold">Don&apos;t forget:</span> Set your <code className="bg-amber-500/20 px-1.5 py-0.5 rounded">OPENAI_API_KEY</code> environment variable!
             </p>
           </div>
-        </section>
+        </CollapsibleSection>
 
         {/* Official Docs */}
-        <section className="card p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Learn More</h2>
+        <CollapsibleSection
+          id="learn-more"
+          title="Learn More"
+          isOpen={expandedSections.learnMore}
+          onToggle={() => toggleSection('learnMore')}
+        >
           <div className="grid md:grid-cols-2 gap-4">
             <a 
               href="https://docs.agno.com" 
@@ -624,7 +806,7 @@ python-dotenv`}
               </div>
             </a>
           </div>
-        </section>
+        </CollapsibleSection>
 
         {/* CTA */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

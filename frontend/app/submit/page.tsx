@@ -11,14 +11,12 @@ function SubmitForm() {
   const searchParams = useSearchParams();
   const preselectedChallenge = searchParams.get('challenge');
 
-  const [submissionType, setSubmissionType] = useState<'api' | 'python'>('api');
   const [teamKey, setTeamKey] = useState('');
   const [teamName, setTeamName] = useState<string | null>(null);
   const [isValidatingKey, setIsValidatingKey] = useState(false);
   const [keyError, setKeyError] = useState<string | null>(null);
   const [challengeId, setChallengeId] = useState(preselectedChallenge || 'factcheck');
   const [apiUrl, setApiUrl] = useState('');
-  const [file, setFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
@@ -82,17 +80,8 @@ function SubmitForm() {
       const formData = new FormData();
       formData.append('team_key', teamKey);
       formData.append('challenge_id', challengeId);
-
-      let endpoint = '';
-      if (submissionType === 'api') {
-        formData.append('api_url', apiUrl);
-        endpoint = `${API_BASE_URL}/api/submissions/api-endpoint`;
-      } else {
-        if (file) {
-          formData.append('file', file);
-        }
-        endpoint = `${API_BASE_URL}/api/submissions/python-file`;
-      }
+      formData.append('api_url', apiUrl);
+      const endpoint = `${API_BASE_URL}/api/submissions/api-endpoint`;
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -123,41 +112,6 @@ function SubmitForm() {
     }
   };
 
-  const pythonTemplate = `import requests
-
-def solve(query: str, search_api_url: str) -> dict:
-    """
-    Your RAG agent implementation.
-    
-    Args:
-        query: The question or claim to process
-        search_api_url: URL of the knowledge base search API
-    
-    Returns:
-        dict with keys: thought_process, retrieved_context_ids, 
-                       final_answer, citation
-    """
-    # Step 1: Search the knowledge base
-    response = requests.post(search_api_url, json={
-        "query": query,
-        "top_k": 5
-    })
-    results = response.json()["results"]
-    
-    # Step 2: Process results and reason
-    context_ids = [r["doc_id"] for r in results]
-    context_text = "\\n".join([r["content"] for r in results])
-    
-    # Step 3: Generate your answer (add your logic here)
-    # This is where you'd use an LLM or your own reasoning
-    
-    return {
-        "thought_process": "Your reasoning here...",
-        "retrieved_context_ids": context_ids,
-        "final_answer": "Your answer here...",
-        "citation": f"{context_ids[0]}: relevant quote"
-    }`;
-
   const apiTemplate = `// Submit URL format (using ngrok):
 // https://abc123.ngrok-free.app/solve
 
@@ -179,30 +133,6 @@ def solve(query: str, search_api_url: str) -> dict:
 
   return (
     <>
-      {/* Submission Type Toggle */}
-      <div className="card p-2 mb-8 inline-flex w-full">
-        <button
-          onClick={() => setSubmissionType('api')}
-          className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all duration-300 ${
-            submissionType === 'api'
-              ? 'bg-gradient-to-r from-[var(--accent-cyan)] to-[#00d9c7] text-[#0b0f2b]'
-              : 'text-white/60 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          API Endpoint
-        </button>
-        <button
-          onClick={() => setSubmissionType('python')}
-          className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all duration-300 ${
-            submissionType === 'python'
-              ? 'bg-gradient-to-r from-[var(--accent-cyan)] to-[#00d9c7] text-[#0b0f2b]'
-              : 'text-white/60 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          Python File
-        </button>
-      </div>
-
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Form */}
         <div className="card p-8">
@@ -276,52 +206,33 @@ def solve(query: str, search_api_url: str) -> dict:
               </select>
             </div>
 
-            {/* API URL or File Upload */}
-            {submissionType === 'api' ? (
-              <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">API Endpoint URL</label>
-                <input
-                  type="url"
-                  value={apiUrl}
-                  onChange={(e) => setApiUrl(e.target.value)}
-                  required
-                  placeholder="https://abc123.ngrok-free.app/solve"
-                  className="w-full px-4 py-3 rounded-xl"
-                />
-                <p className="text-sm text-white/40 mt-2">
-                  Your endpoint must accept POST requests and return the expected JSON format.
-                </p>
-                <a 
-                  href="/docs#ngrok-setup" 
-                  className="text-sm text-[var(--accent-cyan)] hover:underline mt-1 inline-flex items-center gap-1"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Need help exposing your local server? See ngrok setup guide →
-                </a>
-              </div>
-            ) : (
-              <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">Python File</label>
-                <div className="relative">
-                  <input
-                    type="file"
-                    accept=".py"
-                    onChange={(e) => setFile(e.target.files?.[0] || null)}
-                    required
-                    className="w-full px-4 py-3 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-[var(--accent-cyan)] file:text-[#0b0f2b] file:font-semibold file:cursor-pointer hover:file:bg-[#00d9c7]"
-                  />
-                </div>
-                <p className="text-sm text-white/40 mt-2">
-                  Upload a .py file with a <code className="text-[var(--accent-cyan)]">solve(query, search_api_url)</code> function.
-                </p>
-              </div>
-            )}
+            {/* API URL */}
+            <div>
+              <label className="block text-sm font-medium text-white/80 mb-2">API Endpoint URL</label>
+              <input
+                type="url"
+                value={apiUrl}
+                onChange={(e) => setApiUrl(e.target.value)}
+                required
+                placeholder="https://abc123.ngrok-free.app/solve"
+                className="w-full px-4 py-3 rounded-xl"
+              />
+              <p className="text-sm text-white/40 mt-2">
+                Your endpoint must accept POST requests and return the expected JSON format.
+              </p>
+              <a 
+                href="/docs#ngrok-setup" 
+                className="text-sm text-[var(--accent-cyan)] hover:underline mt-1 inline-flex items-center gap-1"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Need help exposing your local server? See ngrok setup guide →
+              </a>
+            </div>
 
-            {/* Important Warning for API submissions */}
-            {submissionType === 'api' && (
-              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+            {/* Important Warning */}
+            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
                 <div className="flex items-start gap-3">
                   <svg className="w-6 h-6 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -337,7 +248,6 @@ def solve(query: str, search_api_url: str) -> dict:
                   </div>
                 </div>
               </div>
-            )}
 
             {/* Submit Button */}
             <button
@@ -374,7 +284,7 @@ def solve(query: str, search_api_url: str) -> dict:
                   Submission ID: <span className="font-mono text-[var(--accent-cyan)]">{result.submissionId}</span>
                 </p>
               )}
-              {result.success && submissionType === 'api' && (
+              {result.success && (
                 <div className="mt-3 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                   <p className="text-emerald-300 text-sm flex items-center gap-2">
                     <svg className="w-5 h-5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -388,25 +298,21 @@ def solve(query: str, search_api_url: str) -> dict:
           )}
         </div>
 
-        {/* Template / Instructions */}
+        {/* API Requirements */}
         <div>
           <div className="card p-8">
             <div className="flex items-center gap-3 mb-4">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--accent-purple)" className="star-glow">
                 <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
               </svg>
-              <h2 className="text-xl font-bold text-white">
-                {submissionType === 'api' ? 'API Requirements' : 'Python Template'}
-              </h2>
+              <h2 className="text-xl font-bold text-white">API Requirements</h2>
             </div>
             <p className="text-white/60 mb-6">
-              {submissionType === 'api'
-                ? 'Your API endpoint should accept POST requests and return the expected JSON format.'
-                : 'Use this template as a starting point for your Python submission.'}
+              Your API endpoint should accept POST requests and return the expected JSON format.
             </p>
             <CodeBlock
-              code={submissionType === 'api' ? apiTemplate : pythonTemplate}
-              language={submissionType === 'api' ? 'json' : 'python'}
+              code={apiTemplate}
+              language="json"
             />
           </div>
 
@@ -419,18 +325,14 @@ def solve(query: str, search_api_url: str) -> dict:
               Tips for Alpha AI Datathon
             </h3>
             <ul className="space-y-3 text-sm text-white/60">
-              {submissionType === 'api' && (
-                <>
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-400 mt-1">⚡</span>
-                    <span><strong className="text-amber-400">Keep your server running!</strong> Don&apos;t close ngrok or your terminal for at least 5-10 minutes after submitting</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[var(--accent-cyan)] mt-1">•</span>
-                    <span>Test your ngrok URL in a browser before submitting</span>
-                  </li>
-                </>
-              )}
+              <li className="flex items-start gap-2">
+                <span className="text-amber-400 mt-1">⚡</span>
+                <span><strong className="text-amber-400">Keep your server running!</strong> Don&apos;t close ngrok or your terminal for at least 5-10 minutes after submitting</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[var(--accent-cyan)] mt-1">•</span>
+                <span>Test your ngrok URL in a browser before submitting</span>
+              </li>
               <li className="flex items-start gap-2">
                 <span className="text-[var(--accent-cyan)] mt-1">•</span>
                 Test with sample questions before submitting
@@ -468,7 +370,7 @@ export default function SubmitPage() {
             <h1 className="text-4xl md:text-5xl font-black text-white">Submit Your Agent</h1>
           </div>
           <p className="text-white/60 max-w-2xl mx-auto text-lg">
-            Submit your RAG agent for evaluation at the <span className="text-[var(--accent-cyan)] font-semibold">Alpha AI Datathon</span>. Choose between hosting your own API endpoint or uploading a Python file.
+            Submit your RAG agent for evaluation at the <span className="text-[var(--accent-cyan)] font-semibold">Alpha AI Datathon</span>. Host your agent as an API endpoint and submit it for scoring.
           </p>
         </div>
 
