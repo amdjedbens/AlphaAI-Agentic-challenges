@@ -158,7 +158,10 @@ def solve(query: str, search_api_url: str) -> dict:
         "citation": f"{context_ids[0]}: relevant quote"
     }`;
 
-  const apiTemplate = `// Your API should accept POST requests with this body:
+  const apiTemplate = `// Submit URL format (using ngrok):
+// https://abc123.ngrok-free.app/solve
+
+// Your /solve endpoint receives POST requests with:
 {
   "claim": "The claim to verify",  // for factcheck
   // OR
@@ -166,7 +169,7 @@ def solve(query: str, search_api_url: str) -> dict:
   "kb_search_url": "${API_BASE_URL}/api/kb/{challenge}/search"
 }
 
-// And return:
+// And must return:
 {
   "thought_process": "Your reasoning...",
   "retrieved_context_ids": ["doc_1", "doc_2"],
@@ -282,12 +285,21 @@ def solve(query: str, search_api_url: str) -> dict:
                   value={apiUrl}
                   onChange={(e) => setApiUrl(e.target.value)}
                   required
-                  placeholder="https://your-agent.com/api/solve"
+                  placeholder="https://abc123.ngrok-free.app/solve"
                   className="w-full px-4 py-3 rounded-xl"
                 />
                 <p className="text-sm text-white/40 mt-2">
                   Your endpoint must accept POST requests and return the expected JSON format.
                 </p>
+                <a 
+                  href="/docs#ngrok-setup" 
+                  className="text-sm text-[var(--accent-cyan)] hover:underline mt-1 inline-flex items-center gap-1"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Need help exposing your local server? See ngrok setup guide →
+                </a>
               </div>
             ) : (
               <div>
@@ -307,6 +319,26 @@ def solve(query: str, search_api_url: str) -> dict:
               </div>
             )}
 
+            {/* Important Warning for API submissions */}
+            {submissionType === 'api' && (
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                <div className="flex items-start gap-3">
+                  <svg className="w-6 h-6 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <div>
+                    <h4 className="text-amber-400 font-semibold mb-1">⚠️ Before You Submit</h4>
+                    <ul className="text-amber-300/80 text-sm space-y-1">
+                      <li>✓ Double-check your URL is accessible from the internet</li>
+                      <li>✓ Test it by opening the URL in your browser first</li>
+                      <li>✓ <strong>Keep your server AND ngrok running</strong> for 5-10 minutes</li>
+                      <li>✓ Don&apos;t close your terminal until evaluation completes</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -319,7 +351,7 @@ def solve(query: str, search_api_url: str) -> dict:
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Submitting...
+                  Evaluating your agent...
                 </span>
               ) : (
                 'Submit for Evaluation'
@@ -341,6 +373,16 @@ def solve(query: str, search_api_url: str) -> dict:
                 <p className="text-sm text-white/60 mt-2">
                   Submission ID: <span className="font-mono text-[var(--accent-cyan)]">{result.submissionId}</span>
                 </p>
+              )}
+              {result.success && submissionType === 'api' && (
+                <div className="mt-3 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                  <p className="text-emerald-300 text-sm flex items-center gap-2">
+                    <svg className="w-5 h-5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <strong>Keep your server running!</strong> We&apos;re evaluating your solution now.
+                  </p>
+                </div>
               )}
             </div>
           )}
@@ -377,6 +419,18 @@ def solve(query: str, search_api_url: str) -> dict:
               Tips for Alpha AI Datathon
             </h3>
             <ul className="space-y-3 text-sm text-white/60">
+              {submissionType === 'api' && (
+                <>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-400 mt-1">⚡</span>
+                    <span><strong className="text-amber-400">Keep your server running!</strong> Don&apos;t close ngrok or your terminal for at least 5-10 minutes after submitting</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[var(--accent-cyan)] mt-1">•</span>
+                    <span>Test your ngrok URL in a browser before submitting</span>
+                  </li>
+                </>
+              )}
               <li className="flex items-start gap-2">
                 <span className="text-[var(--accent-cyan)] mt-1">•</span>
                 Test with sample questions before submitting
