@@ -6,8 +6,15 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import os
+from pathlib import Path
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./challenges.db")
+# Use a persistent directory for database storage
+DB_DIR = os.getenv("DB_DIR", "/app/db")
+Path(DB_DIR).mkdir(parents=True, exist_ok=True)
+
+# Database file path within the persistent directory
+DB_PATH = os.path.join(DB_DIR, "challenges.db")
+DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DB_PATH}")
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -72,8 +79,12 @@ class LeaderboardEntry(Base):
 
 
 async def init_db():
-    """Initialize database tables."""
+    """Initialize database tables and seed initial data if empty."""
     Base.metadata.create_all(bind=engine)
+    
+    # Seed initial data if database is empty
+    from db.seed_data import seed_on_startup
+    seed_on_startup()
 
 
 def get_db():

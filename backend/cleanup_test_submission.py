@@ -6,9 +6,11 @@ Usage: python cleanup_test_submission.py
 """
 import sqlite3
 import os
+from pathlib import Path
 
-# Database path - adjust if needed
-DB_PATH = os.getenv("DATABASE_PATH", "./challenges.db")
+# Use the same database directory as the main app
+DB_DIR = os.getenv("DB_DIR", "/app/db")
+DB_PATH = os.getenv("DATABASE_PATH", os.path.join(DB_DIR, "challenges.db"))
 
 def cleanup_team_submissions(team_name: str):
     """Remove all submissions and related data for a team."""

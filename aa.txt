@@ -1,0 +1,24 @@
+https://squid-app-7q77b.ondigitalocean.app/api/api/public/leaderboard/v2
+{
+  "factcheck": {
+    "public": [
+      {
+        "teamId": 1,
+        "teamName": "data-divas",
+        "displayScore": "0.00000"
+      }
+    ],
+    "private": [
+      {
+        "teamId": 1,
+        "submissionId": 2,
+        "rank": 1,
+        "displayScore": "1.33333"
+      }
+    ]
+  },
+  "legal": {
+    "public": [],
+    "private": []
+  }
+}

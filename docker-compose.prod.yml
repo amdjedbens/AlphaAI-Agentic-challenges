@@ -16,8 +16,9 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
       - ./data:/app/data
+      - ./aa.txt:/app/aa.txt:ro  # Mount seed data file (read-only)
       - backend_chroma:/app/chroma_db
-      - backend_db:/app/challenges.db
+      - backend_db:/app/db  # Persistent database directory
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8006/"]
       interval: 30s
@@ -84,4 +85,6 @@ volumes:
     driver: local
   backend_db:
     driver: local
+    # This volume persists the database across container recreations
+    # To backup: docker run --rm -v alpha-ai-challenges_backend_db:/data -v $(pwd):/backup alpine tar czf /backup/db-backup-$(date +%Y%m%d).tar.gz -C /data .
 
