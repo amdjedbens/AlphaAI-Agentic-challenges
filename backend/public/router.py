@@ -5,7 +5,7 @@ Endpoints designed to be shared externally.
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from typing import List, Optional
+from typing import List, Optional, Dict
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -42,6 +42,28 @@ class LeaderboardResponse(BaseModel):
     leaderboard: List[LeaderboardTeamEntry]
     total_teams: int
     last_updated: datetime
+
+
+# New AISM-style leaderboard models
+class PublicLeaderboardEntry(BaseModel):
+    """Public leaderboard entry (visible to all)."""
+    teamId: int
+    teamName: str
+    displayScore: str
+
+
+class PrivateLeaderboardEntry(BaseModel):
+    """Private leaderboard entry (with submission details)."""
+    teamId: int
+    submissionId: int
+    rank: int
+    displayScore: str
+
+
+class ChallengeLeaderboard(BaseModel):
+    """Leaderboard for a single challenge."""
+    public: List[PublicLeaderboardEntry]
+    private: List[PrivateLeaderboardEntry]
 
 
 @router.get("/team/{team_name}", response_model=TeamScoreResponse)
@@ -243,4 +265,78 @@ async def list_all_teams(db: Session = Depends(get_db)):
         "teams": teams,
         "count": len(teams)
     }
+
+
+@router.get("/leaderboard/v2")
+async def get_leaderboard_v2(db: Session = Depends(get_db)) -> Dict[str, ChallengeLeaderboard]:
+    """
+    Get the leaderboard in AISM-compatible format with PUBLIC/PRIVATE score split.
+    
+    Returns a dictionary keyed by challenge name, each containing:
+        - public: List of entries with teamId, teamName, displayScore (PUBLIC test set score)
+        - private: List of entries with teamId, submissionId, rank, displayScore (PRIVATE test set score)
+    
+    PUBLIC scores are visible during the competition.
+    PRIVATE scores are the "real" scores revealed at competition end.
+    """
+    challenges = ["factcheck", "legal"]
+    result = {}
+    
+    for challenge in challenges:
+        # Get all leaderboard entries for this challenge
+        entries = db.query(LeaderboardEntry).filter(
+            LeaderboardEntry.challenge_id == challenge
+        ).all()
+        
+        # Sort entries by PUBLIC score for public leaderboard
+        public_sorted = sorted(
+            entries, 
+            key=lambda x: x.best_public_score if x.best_public_score is not None else 0.0, 
+            reverse=True
+        )
+        
+        # Sort entries by PRIVATE score for private leaderboard
+        private_sorted = sorted(
+            entries,
+            key=lambda x: x.best_private_score if x.best_private_score is not None else 0.0,
+            reverse=True
+        )
+        
+        public_entries = []
+        private_entries = []
+        
+        # Build public leaderboard (sorted by public score)
+        for entry in public_sorted:
+            team_id = entry.id
+            # Use public score, fall back to overall if not available
+            public_score = entry.best_public_score if entry.best_public_score is not None else entry.best_score
+            display_score = f"{public_score:.5f}"
+            
+            public_entries.append(PublicLeaderboardEntry(
+                teamId=team_id,
+                teamName=entry.team_name,
+                displayScore=display_score
+            ))
+        
+        # Build private leaderboard (sorted by private score, includes rank)
+        for rank, entry in enumerate(private_sorted, start=1):
+            team_id = entry.id
+            submission_id = entry.best_submission_id if entry.best_submission_id else 0
+            # Use private score, fall back to overall if not available
+            private_score = entry.best_private_score if entry.best_private_score is not None else entry.best_score
+            display_score = f"{private_score:.5f}"
+            
+            private_entries.append(PrivateLeaderboardEntry(
+                teamId=team_id,
+                submissionId=submission_id,
+                rank=rank,
+                displayScore=display_score
+            ))
+        
+        result[challenge] = ChallengeLeaderboard(
+            public=public_entries,
+            private=private_entries
+        )
+    
+    return result
 

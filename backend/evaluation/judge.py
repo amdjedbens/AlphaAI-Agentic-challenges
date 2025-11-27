@@ -22,60 +22,90 @@ def get_openai_client():
     return client
 
 
-# Golden answers for evaluation (hidden test set)
-FACTCHECK_GOLDEN_ANSWERS = {
+# Golden answers for evaluation - SPLIT INTO PUBLIC AND PRIVATE TEST SETS
+# Public: Visible during competition (~30-40% of questions)
+# Private: Hidden until competition ends (~60-70% of questions)
+
+# ==================== FACTCHECK CHALLENGE ====================
+FACTCHECK_PUBLIC_ANSWERS = {
+    # PUBLIC TEST SET - scores visible during competition
     "fc_test_1": {
         "claim": "The Eiffel Tower was completed in 1889 for the World's Fair.",
         "expected_verdict": "True",
         "expected_doc_ids": ["wiki_eiffel_tower"],
-        "key_facts": ["completed 1889", "World's Fair", "centennial French Revolution"]
+        "key_facts": ["completed 1889", "World's Fair", "centennial French Revolution"],
+        "is_public": True
     },
     "fc_test_2": {
         "claim": "Albert Einstein was born in Germany in 1879.",
         "expected_verdict": "True",
         "expected_doc_ids": ["wiki_einstein"],
-        "key_facts": ["born 1879", "German-born", "Ulm"]
+        "key_facts": ["born 1879", "German-born", "Ulm"],
+        "is_public": True
     },
+}
+
+FACTCHECK_PRIVATE_ANSWERS = {
+    # PRIVATE TEST SET - scores revealed only at end
     "fc_test_3": {
         "claim": "The Great Wall of China is visible from the Moon with the naked eye.",
         "expected_verdict": "False",
         "expected_doc_ids": ["wiki_great_wall"],
-        "key_facts": ["NOT visible", "myth debunked", "too narrow"]
+        "key_facts": ["NOT visible", "myth debunked", "too narrow"],
+        "is_public": False
     },
     "fc_test_4": {
         "claim": "Water boils at 100 degrees Celsius at sea level.",
         "expected_verdict": "True",
         "expected_doc_ids": ["wiki_water_properties"],
-        "key_facts": ["100 degrees Celsius", "sea level", "standard atmospheric pressure"]
+        "key_facts": ["100 degrees Celsius", "sea level", "standard atmospheric pressure"],
+        "is_public": False
     },
     "fc_test_5": {
         "claim": "The Amazon River is the longest river in the world.",
         "expected_verdict": "False",
         "expected_doc_ids": ["wiki_amazon_river", "wiki_nile_river"],
-        "key_facts": ["second-longest", "Nile is longest"]
+        "key_facts": ["second-longest", "Nile is longest"],
+        "is_public": False
     },
 }
 
-LEGAL_GOLDEN_ANSWERS = {
+# Combined for backward compatibility
+FACTCHECK_GOLDEN_ANSWERS = {**FACTCHECK_PUBLIC_ANSWERS, **FACTCHECK_PRIVATE_ANSWERS}
+
+
+# ==================== LEGAL CHALLENGE ====================
+LEGAL_PUBLIC_ANSWERS = {
+    # PUBLIC TEST SET - scores visible during competition
     "legal_test_1": {
         "query": "Can I build a 3-story residential building in Zone B?",
         "expected_answer": "It depends on location",
         "expected_clause_ids": ["clause_B_2", "clause_B_2_conflict"],
-        "key_reasoning": ["conflict between clauses", "near R-1 boundary limits to 2 stories", "otherwise 4 stories allowed"]
+        "key_reasoning": ["conflict between clauses", "near R-1 boundary limits to 2 stories", "otherwise 4 stories allowed"],
+        "is_public": True
     },
+}
+
+LEGAL_PRIVATE_ANSWERS = {
+    # PRIVATE TEST SET - scores revealed only at end
     "legal_test_2": {
         "query": "What is the maximum lot coverage allowed in Zone A-Commercial?",
         "expected_answer": "80%",
         "expected_clause_ids": ["clause_A_3"],
-        "key_reasoning": ["80% maximum", "10% must be green space"]
+        "key_reasoning": ["80% maximum", "10% must be green space"],
+        "is_public": False
     },
     "legal_test_3": {
         "query": "Can I operate a home-based bakery in Zone R-1?",
         "expected_answer": "Conditionally yes",
         "expected_clause_ids": ["clause_R1_3", "clause_R1_3_exception"],
-        "key_reasoning": ["generally prohibited", "exception with Special Use Permit", "cottage food operations", "health department approval"]
+        "key_reasoning": ["generally prohibited", "exception with Special Use Permit", "cottage food operations", "health department approval"],
+        "is_public": False
     },
 }
+
+# Combined for backward compatibility
+LEGAL_GOLDEN_ANSWERS = {**LEGAL_PUBLIC_ANSWERS, **LEGAL_PRIVATE_ANSWERS}
 
 
 def simple_factcheck_evaluation(
@@ -444,20 +474,51 @@ Respond in JSON format:
         }
 
 
-def calculate_aggregate_scores(question_results: List[Dict[str, Any]]) -> Dict[str, float]:
-    """Calculate aggregate scores from individual question results."""
+def calculate_aggregate_scores(question_results: List[Dict[str, Any]], challenge_type: str = "factcheck") -> Dict[str, float]:
+    """Calculate aggregate scores from individual question results.
+    
+    Returns:
+        - overall_score: Combined score across all questions
+        - public_score: Score on public test set only (visible during competition)
+        - private_score: Score on private test set only (revealed at end)
+        - retrieval_score, faithfulness_score, reasoning_score: Component scores
+    """
     if not question_results:
         return {
             "overall_score": 0.0,
+            "public_score": 0.0,
+            "private_score": 0.0,
             "retrieval_score": 0.0,
             "faithfulness_score": 0.0,
             "reasoning_score": 0.0
         }
     
+    # Get the appropriate public/private answer sets
+    if challenge_type == "factcheck":
+        public_ids = set(FACTCHECK_PUBLIC_ANSWERS.keys())
+        private_ids = set(FACTCHECK_PRIVATE_ANSWERS.keys())
+    else:  # legal
+        public_ids = set(LEGAL_PUBLIC_ANSWERS.keys())
+        private_ids = set(LEGAL_PRIVATE_ANSWERS.keys())
+    
+    # Separate results into public and private
+    public_results = [r for r in question_results if r.get("question_id") in public_ids]
+    private_results = [r for r in question_results if r.get("question_id") in private_ids]
+    
     n = len(question_results)
+    n_public = len(public_results) if public_results else 1
+    n_private = len(private_results) if private_results else 1
+    
+    # Calculate public score (average of public test questions)
+    public_score = sum(r.get("overall_score", 0) for r in public_results) / n_public if public_results else 0.0
+    
+    # Calculate private score (average of private test questions)
+    private_score = sum(r.get("overall_score", 0) for r in private_results) / n_private if private_results else 0.0
     
     return {
         "overall_score": sum(r.get("overall_score", 0) for r in question_results) / n,
+        "public_score": public_score,
+        "private_score": private_score,
         "retrieval_score": sum(r.get("retrieval_score", 0) for r in question_results) / n,
         "faithfulness_score": sum(r.get("faithfulness_score", 0) for r in question_results) / n,
         "reasoning_score": sum(r.get("reasoning_score", r.get("correctness_score", 0)) for r in question_results) / n

@@ -445,8 +445,8 @@ async def evaluate_api_submission(
                         "reasoning_score": 0.0
                     })
         
-        # Calculate aggregate scores
-        scores = calculate_aggregate_scores(question_results)
+        # Calculate aggregate scores (including public/private split)
+        scores = calculate_aggregate_scores(question_results, challenge_id)
         logger.info(f"Final scores for {team_name}: {scores}")
         
         # Generate feedback
@@ -461,12 +461,20 @@ async def evaluate_api_submission(
             retrieval_score=scores["retrieval_score"],
             faithfulness_score=scores["faithfulness_score"],
             reasoning_score=scores["reasoning_score"],
+            public_score=scores["public_score"],
+            private_score=scores["private_score"],
             question_results=question_results
         )
         db.add(eval_result)
         
-        # Update leaderboard
-        update_leaderboard(db, team_name, challenge_id, scores["overall_score"])
+        # Update leaderboard with public/private scores
+        update_leaderboard(
+            db, team_name, challenge_id, 
+            overall_score=scores["overall_score"],
+            public_score=scores["public_score"],
+            private_score=scores["private_score"],
+            submission_id=submission_id
+        )
         
         # Update submission status with feedback
         submission.status = "completed"
@@ -570,8 +578,8 @@ print(json.dumps(result))
                     "overall_score": 0.0
                 })
         
-        # Calculate aggregate scores
-        scores = calculate_aggregate_scores(question_results)
+        # Calculate aggregate scores (including public/private split)
+        scores = calculate_aggregate_scores(question_results, challenge_id)
         
         # Save evaluation result
         eval_result = EvaluationResult(
@@ -582,12 +590,20 @@ print(json.dumps(result))
             retrieval_score=scores["retrieval_score"],
             faithfulness_score=scores["faithfulness_score"],
             reasoning_score=scores["reasoning_score"],
+            public_score=scores["public_score"],
+            private_score=scores["private_score"],
             question_results=question_results
         )
         db.add(eval_result)
         
-        # Update leaderboard
-        update_leaderboard(db, team_name, challenge_id, scores["overall_score"])
+        # Update leaderboard with public/private scores
+        update_leaderboard(
+            db, team_name, challenge_id,
+            overall_score=scores["overall_score"],
+            public_score=scores["public_score"],
+            private_score=scores["private_score"],
+            submission_id=submission_id
+        )
         
         # Update submission status
         submission.status = "completed"
@@ -603,23 +619,47 @@ print(json.dumps(result))
         db.close()
 
 
-def update_leaderboard(db: Session, team_name: str, challenge_id: str, score: float):
-    """Update the leaderboard with new submission."""
+def update_leaderboard(
+    db: Session, 
+    team_name: str, 
+    challenge_id: str, 
+    overall_score: float,
+    public_score: float = None,
+    private_score: float = None,
+    submission_id: int = None
+):
+    """Update the leaderboard with new submission including public/private scores."""
     entry = db.query(LeaderboardEntry).filter(
         LeaderboardEntry.team_name == team_name,
         LeaderboardEntry.challenge_id == challenge_id
     ).first()
     
     if entry:
-        if score > entry.best_score:
-            entry.best_score = score
+        # Update best scores if this submission is better
+        if overall_score > entry.best_score:
+            entry.best_score = overall_score
+            entry.best_submission_id = submission_id
+        
+        # Update public score if better (or if not set yet)
+        if public_score is not None:
+            if entry.best_public_score is None or public_score > entry.best_public_score:
+                entry.best_public_score = public_score
+        
+        # Update private score if better (or if not set yet)
+        if private_score is not None:
+            if entry.best_private_score is None or private_score > entry.best_private_score:
+                entry.best_private_score = private_score
+        
         entry.submission_count += 1
         entry.last_submission = datetime.utcnow()
     else:
         entry = LeaderboardEntry(
             team_name=team_name,
             challenge_id=challenge_id,
-            best_score=score,
+            best_score=overall_score,
+            best_public_score=public_score,
+            best_private_score=private_score,
+            best_submission_id=submission_id,
             submission_count=1
         )
         db.add(entry)

@@ -40,11 +40,15 @@ class EvaluationResult(Base):
     team_name = Column(String(100), index=True)
     challenge_id = Column(String(50), index=True)
     
-    # Scores
+    # Scores (overall combines public + private)
     overall_score = Column(Float)
     retrieval_score = Column(Float)
     faithfulness_score = Column(Float)
     reasoning_score = Column(Float)
+    
+    # Public/Private split scores
+    public_score = Column(Float, nullable=True)   # Score on public test set (visible during competition)
+    private_score = Column(Float, nullable=True)  # Score on private test set (revealed at end)
     
     # Detailed results
     question_results = Column(JSON)  # Per-question breakdown
@@ -59,7 +63,10 @@ class LeaderboardEntry(Base):
     id = Column(Integer, primary_key=True, index=True)
     team_name = Column(String(100), index=True)
     challenge_id = Column(String(50), index=True)
-    best_score = Column(Float)
+    best_score = Column(Float)  # Overall best score (for backward compat)
+    best_public_score = Column(Float, nullable=True)   # Best score on public test set
+    best_private_score = Column(Float, nullable=True)  # Best score on private test set
+    best_submission_id = Column(Integer, nullable=True)  # Submission ID for best score
     submission_count = Column(Integer, default=1)
     last_submission = Column(DateTime, default=datetime.utcnow)
 

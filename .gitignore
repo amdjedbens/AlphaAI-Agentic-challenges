@@ -140,3 +140,4 @@ temp/
 .cache/
 *.pid
 *.seed
+team_keys.json
