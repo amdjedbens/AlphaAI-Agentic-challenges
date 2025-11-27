@@ -113,36 +113,47 @@ def simple_factcheck_evaluation(
     agent_response: Dict[str, Any],
     golden_answer: Dict[str, Any]
 ) -> Dict[str, float]:
-    """Simple rule-based evaluation as fallback when LLM judge unavailable. STRICT MODE."""
-    scores = {"verdict_score": 0, "faithfulness_score": 4, "reasoning_score": 4}
+    """Simple rule-based evaluation as fallback when LLM judge unavailable. FAIR MODE."""
+    scores = {"verdict_score": 0, "faithfulness_score": 6, "reasoning_score": 6}
     
-    # Check verdict - strict
+    # Check verdict - fair (more lenient matching)
     agent_verdict = agent_response.get("final_answer", "").lower().strip()
     expected_verdict = golden_answer["expected_verdict"].lower().strip()
     
+    # More lenient verdict matching
     if agent_verdict == expected_verdict:
         scores["verdict_score"] = 10
-    elif "partial" in agent_verdict and expected_verdict in ["true", "false"]:
-        scores["verdict_score"] = 4  # Reduced from 5
+    elif expected_verdict in agent_verdict or agent_verdict in expected_verdict:
+        scores["verdict_score"] = 8  # Partial match
+    elif "partial" in agent_verdict:
+        scores["verdict_score"] = 6
+    elif agent_verdict:  # At least provided an answer
+        scores["verdict_score"] = 3
     
-    # Check if citation exists and is specific
+    # Check if citation exists (more lenient)
     citation = agent_response.get("citation", "")
-    if citation and len(citation) > 100 and ":" in citation:  # Must have doc_id: quote format
+    if citation and len(citation) > 50:
+        scores["faithfulness_score"] = 8
+    elif citation and len(citation) > 20:
         scores["faithfulness_score"] = 7
-    elif citation and len(citation) > 50:
-        scores["faithfulness_score"] = 5
+    elif citation:
+        scores["faithfulness_score"] = 6
     
-    # Check if thought process is detailed
+    # Check if thought process exists (more lenient)
     thought = agent_response.get("thought_process", "")
     key_facts = golden_answer.get("key_facts", [])
     
-    if thought and len(thought) > 100:
-        # Check if key facts are mentioned
+    if thought and len(thought) > 50:
+        # Check if any key facts are mentioned
         facts_found = sum(1 for fact in key_facts if fact.lower() in thought.lower())
-        if facts_found >= len(key_facts) * 0.6:
+        if facts_found >= len(key_facts) * 0.5:
+            scores["reasoning_score"] = 8
+        elif facts_found >= 1:
             scores["reasoning_score"] = 7
-        elif facts_found >= len(key_facts) * 0.3:
-            scores["reasoning_score"] = 5
+        else:
+            scores["reasoning_score"] = 6
+    elif thought:
+        scores["reasoning_score"] = 5
     
     return scores
 
@@ -176,16 +187,16 @@ def evaluate_factcheck_response(
             "reasoning_score": scores["reasoning_score"],
             "feedback": "Evaluated using simple rules (LLM judge unavailable)",
             "overall_score": (
-                (10.0 if retrieval_hit else 0.0) * 0.2 +
-                scores["verdict_score"] * 0.4 +
-                scores["faithfulness_score"] * 0.3 +
-                scores["reasoning_score"] * 0.1
+                (10.0 if retrieval_hit else 0.0) * 0.25 +
+                scores["verdict_score"] * 0.35 +
+                scores["faithfulness_score"] * 0.25 +
+                scores["reasoning_score"] * 0.15
             )
         }
     
-    # Use GPT-4 to evaluate the response - STRICT MODE
-    judge_prompt = f"""You are a STRICT and DEMANDING judge evaluating a fact-checking AI agent.
-Be rigorous - only give high scores (8+) for exceptional work.
+    # Use GPT-4 to evaluate the response - FAIR MODE
+    judge_prompt = f"""You are a FAIR and BALANCED judge evaluating a fact-checking AI agent.
+Give credit for correct work and reasonable attempts. High scores (8+) for solid work.
 
 CLAIM: {golden_answer['claim']}
 EXPECTED VERDICT: {golden_answer['expected_verdict']}
@@ -197,30 +208,30 @@ AGENT'S RESPONSE:
 - Final Answer: {agent_response.get('final_answer', 'Not provided')}
 - Citation: {agent_response.get('citation', 'Not provided')}
 
-STRICT EVALUATION CRITERIA:
+FAIR EVALUATION CRITERIA:
 
 1. VERDICT ACCURACY (0-10):
    - 10: Exactly correct verdict
-   - 7: Correct but imprecise (e.g., "True" when "Partially True" is better)
-   - 0: Wrong verdict
+   - 8-9: Correct verdict with minor imprecision
+   - 6-7: Partially correct or reasonable interpretation
+   - 3-5: Wrong but shows understanding
+   - 0-2: Completely wrong
 
-2. FAITHFULNESS (0-10) - BE STRICT:
-   - 10: Exact quotes from documents, no added information
-   - 7-8: Uses document info but paraphrases loosely
-   - 5-6: Some claims not directly from documents
-   - 0-4: Hallucinations or unsupported claims
-   - DEDUCT 2 points if citation is vague or missing specific quotes
-   - DEDUCT 3 points if thought process mentions facts not in retrieved docs
+2. FAITHFULNESS (0-10):
+   - 10: Uses document info accurately
+   - 8-9: Mostly faithful with good paraphrasing
+   - 6-7: Uses document info with minor additions
+   - 4-5: Some unsupported claims
+   - 0-3: Major hallucinations
 
-3. REASONING QUALITY (0-10) - BE STRICT:
-   - 10: Step-by-step analysis, addresses ALL key facts, explains WHY
-   - 7-8: Good reasoning but misses 1-2 key facts
-   - 5-6: Basic reasoning, misses important nuances
-   - 0-4: Superficial or illogical reasoning
-   - DEDUCT 2 points if no clear methodology explained
-   - DEDUCT 2 points if key facts are not explicitly compared
+3. REASONING QUALITY (0-10):
+   - 10: Clear step-by-step analysis
+   - 8-9: Good reasoning, addresses main facts
+   - 6-7: Decent reasoning with some gaps
+   - 4-5: Basic reasoning present
+   - 0-3: No clear reasoning
 
-IMPORTANT: Average scores should be around 6-7. Only truly exceptional responses get 9+.
+IMPORTANT: Be generous - average scores should be around 7-8 for decent attempts.
 
 Respond in JSON format:
 {{"verdict_score": X, "faithfulness_score": Y, "reasoning_score": Z, "feedback": "specific critique"}}
@@ -247,10 +258,10 @@ Respond in JSON format:
             "reasoning_score": scores.get("reasoning_score", 0),
             "feedback": scores.get("feedback", ""),
             "overall_score": (
-                (10.0 if retrieval_hit else 0.0) * 0.2 +
-                scores.get("verdict_score", 0) * 0.4 +
-                scores.get("faithfulness_score", 0) * 0.3 +
-                scores.get("reasoning_score", 0) * 0.1
+                (10.0 if retrieval_hit else 0.0) * 0.25 +
+                scores.get("verdict_score", 0) * 0.35 +
+                scores.get("faithfulness_score", 0) * 0.25 +
+                scores.get("reasoning_score", 0) * 0.15
             )
         }
     except Exception as e:
@@ -265,10 +276,10 @@ Respond in JSON format:
             "reasoning_score": scores["reasoning_score"],
             "feedback": f"Evaluated using simple rules (LLM error: {str(e)[:50]})",
             "overall_score": (
-                (10.0 if retrieval_hit else 0.0) * 0.2 +
-                scores["verdict_score"] * 0.4 +
-                scores["faithfulness_score"] * 0.3 +
-                scores["reasoning_score"] * 0.1
+                (10.0 if retrieval_hit else 0.0) * 0.25 +
+                scores["verdict_score"] * 0.35 +
+                scores["faithfulness_score"] * 0.25 +
+                scores["reasoning_score"] * 0.15
             )
         }
 
@@ -277,12 +288,12 @@ def simple_legal_evaluation(
     agent_response: Dict[str, Any],
     golden_answer: Dict[str, Any]
 ) -> Dict[str, float]:
-    """Simple rule-based evaluation for legal responses. STRICT MODE."""
+    """Simple rule-based evaluation for legal responses. FAIR MODE."""
     scores = {
-        "correctness_score": 3,  # Start low
-        "faithfulness_score": 4,
-        "conflict_score": 3,  # Start very low - conflicts are important
-        "citation_score": 3
+        "correctness_score": 6,  # Start reasonable
+        "faithfulness_score": 6,
+        "conflict_score": 6,
+        "citation_score": 6
     }
     
     answer = agent_response.get("final_answer", "").lower()
@@ -290,45 +301,46 @@ def simple_legal_evaluation(
     key_reasoning = golden_answer.get("key_reasoning", [])
     expected_clauses = golden_answer.get("expected_clause_ids", [])
     
-    # Check if key reasoning points are mentioned - stricter
+    # Check if key reasoning points are mentioned - more lenient
     matches = sum(1 for point in key_reasoning if any(
         word in answer for word in point.lower().split() if len(word) > 3
     ))
-    if matches >= len(key_reasoning) * 0.8:
+    if matches >= len(key_reasoning) * 0.6:
+        scores["correctness_score"] = 9
+    elif matches >= len(key_reasoning) * 0.4:
+        scores["correctness_score"] = 8
+    elif matches >= len(key_reasoning) * 0.2:
         scores["correctness_score"] = 7
-    elif matches >= len(key_reasoning) * 0.5:
+    elif answer:  # At least provided an answer
         scores["correctness_score"] = 5
-    elif matches >= len(key_reasoning) * 0.3:
-        scores["correctness_score"] = 4
     
-    # Check for conflict detection - VERY strict
-    conflict_words = ["however", "exception", "conflict", "depends", "but", "unless", "notwithstanding"]
+    # Check for conflict detection - more lenient
+    conflict_words = ["however", "exception", "conflict", "depends", "but", "unless", "notwithstanding", "although", "while"]
     has_conflict_clauses = len(expected_clauses) > 1 and any("conflict" in c or "exception" in c for c in expected_clauses)
     
     if has_conflict_clauses:
-        # Must detect conflict
         if any(word in answer for word in conflict_words):
-            # Must also mention both clauses
-            clauses_mentioned = sum(1 for c in expected_clauses if c.lower().replace("_", " ") in answer.lower().replace("_", " "))
-            if clauses_mentioned >= 2:
-                scores["conflict_score"] = 7
-            else:
-                scores["conflict_score"] = 5
+            scores["conflict_score"] = 8
         else:
-            scores["conflict_score"] = 2  # Missed conflict - very bad
+            scores["conflict_score"] = 5  # Missed conflict but not heavily penalized
     else:
-        scores["conflict_score"] = 6  # No conflict expected
+        scores["conflict_score"] = 8  # No conflict expected - give good score
     
-    # Check citations - stricter
+    # Check citations - more lenient
     citation = agent_response.get("citation", "")
     retrieved_ids = agent_response.get("retrieved_context_ids", [])
     
-    # Must cite the right clauses
     correct_citations = sum(1 for c in expected_clauses if c in retrieved_ids)
-    if correct_citations == len(expected_clauses) and "clause" in citation.lower():
-        scores["citation_score"] = 7
-    elif correct_citations >= 1:
-        scores["citation_score"] = 5
+    if correct_citations >= 1:
+        scores["citation_score"] = 8
+    elif citation:
+        scores["citation_score"] = 6
+    
+    # Check faithfulness based on having any citation
+    if citation and len(citation) > 20:
+        scores["faithfulness_score"] = 8
+    elif citation:
+        scores["faithfulness_score"] = 7
     
     return scores
 
@@ -364,17 +376,17 @@ def evaluate_legal_response(
             "citation_score": scores["citation_score"],
             "feedback": "Evaluated using simple rules (LLM judge unavailable)",
             "overall_score": (
-                retrieval_score * 0.2 +
-                scores["correctness_score"] * 0.3 +
-                scores["faithfulness_score"] * 0.25 +
+                retrieval_score * 0.25 +
+                scores["correctness_score"] * 0.30 +
+                scores["faithfulness_score"] * 0.20 +
                 scores["conflict_score"] * 0.15 +
-                scores["citation_score"] * 0.1
+                scores["citation_score"] * 0.10
             )
         }
     
-    # Use GPT-4 to evaluate - STRICT MODE
-    judge_prompt = f"""You are a STRICT and DEMANDING judge evaluating a legal AI agent.
-Be rigorous - only give high scores (8+) for exceptional work.
+    # Use GPT-4 to evaluate - FAIR MODE
+    judge_prompt = f"""You are a FAIR and BALANCED judge evaluating a legal AI agent.
+Give credit for correct work and reasonable attempts. High scores (8+) for solid work.
 
 QUERY: {golden_answer['query']}
 EXPECTED ANSWER: {golden_answer['expected_answer']}
@@ -387,38 +399,37 @@ AGENT'S RESPONSE:
 - Final Answer: {agent_response.get('final_answer', 'Not provided')}
 - Citation: {agent_response.get('citation', 'Not provided')}
 
-STRICT EVALUATION CRITERIA:
+FAIR EVALUATION CRITERIA:
 
-1. ANSWER CORRECTNESS (0-10) - BE STRICT:
-   - 10: Covers ALL key reasoning points with specifics
-   - 7-8: Correct but missing 1-2 key points
-   - 5-6: Partially correct, missing important nuances
-   - 0-4: Incorrect or misleading answer
-   - DEDUCT 3 points if answer doesn't mention specific numbers/limits from clauses
+1. ANSWER CORRECTNESS (0-10):
+   - 10: Covers main reasoning points well
+   - 8-9: Mostly correct with good explanation
+   - 6-7: Partially correct, reasonable attempt
+   - 4-5: Some correct elements
+   - 0-3: Mostly incorrect
 
-2. FAITHFULNESS (0-10) - BE STRICT:
-   - 10: Only states facts directly from retrieved clauses
-   - 7-8: Mostly faithful with minor inferences
-   - 5-6: Some claims not supported by clauses
-   - 0-4: Makes up laws or requirements
-   - DEDUCT 3 points for any made-up legal requirements
+2. FAITHFULNESS (0-10):
+   - 10: Uses clause info accurately
+   - 8-9: Mostly faithful paraphrasing
+   - 6-7: Generally based on clauses
+   - 4-5: Some unsupported claims
+   - 0-3: Major fabrications
 
-3. CONFLICT DETECTION (0-10) - BE VERY STRICT:
-   - 10: Explicitly identifies conflicting clauses AND explains resolution
-   - 7-8: Identifies conflict but weak explanation
-   - 5-6: Mentions "it depends" without specifics
-   - 0-4: Misses obvious conflicts between clauses
-   - If clauses {expected_ids} contain conflicts and agent misses them: MAX 3 points
-   - MUST explain WHEN each conflicting rule applies
+3. CONFLICT DETECTION (0-10):
+   - 10: Identifies conflicts and explains well
+   - 8-9: Notes complexity/conditions
+   - 6-7: Acknowledges "it depends" scenarios
+   - 4-5: Basic awareness of nuance
+   - 0-3: Oversimplifies complex situations
 
-4. CITATION ACCURACY (0-10) - BE STRICT:
-   - 10: Cites specific clause IDs with relevant quotes
-   - 7-8: Cites clause IDs but no quotes
-   - 5-6: Vague references to "the code"
-   - 0-4: No citations or wrong clause IDs
-   - DEDUCT 2 points for each relevant clause NOT cited
+4. CITATION ACCURACY (0-10):
+   - 10: References clauses clearly
+   - 8-9: Mentions relevant sources
+   - 6-7: Some citation present
+   - 4-5: Vague references
+   - 0-3: No citations
 
-IMPORTANT: Average scores should be around 5-6. Only truly exceptional responses get 8+.
+IMPORTANT: Be generous - average scores should be around 7-8 for decent attempts.
 
 Respond in JSON format:
 {{"correctness_score": X, "faithfulness_score": Y, "conflict_score": Z, "citation_score": W, "feedback": "specific critique"}}
@@ -446,11 +457,11 @@ Respond in JSON format:
             "citation_score": scores.get("citation_score", 0),
             "feedback": scores.get("feedback", ""),
             "overall_score": (
-                retrieval_score * 0.2 +
-                scores.get("correctness_score", 0) * 0.3 +
-                scores.get("faithfulness_score", 0) * 0.25 +
+                retrieval_score * 0.25 +
+                scores.get("correctness_score", 0) * 0.30 +
+                scores.get("faithfulness_score", 0) * 0.20 +
                 scores.get("conflict_score", 0) * 0.15 +
-                scores.get("citation_score", 0) * 0.1
+                scores.get("citation_score", 0) * 0.10
             )
         }
     except Exception as e:
@@ -466,11 +477,11 @@ Respond in JSON format:
             "citation_score": scores["citation_score"],
             "feedback": f"Evaluated using simple rules (LLM error: {str(e)[:50]})",
             "overall_score": (
-                retrieval_score * 0.2 +
-                scores["correctness_score"] * 0.3 +
-                scores["faithfulness_score"] * 0.25 +
+                retrieval_score * 0.25 +
+                scores["correctness_score"] * 0.30 +
+                scores["faithfulness_score"] * 0.20 +
                 scores["conflict_score"] * 0.15 +
-                scores["citation_score"] * 0.1
+                scores["citation_score"] * 0.10
             )
         }
 
@@ -479,7 +490,7 @@ def calculate_aggregate_scores(question_results: List[Dict[str, Any]], challenge
     """Calculate aggregate scores from individual question results.
     
     Returns:
-        - overall_score: Combined score across all questions
+        - overall_score: Best score (max of public and private) - NOT weighted
         - public_score: Score on public test set only (visible during competition)
         - private_score: Score on private test set only (revealed at end)
         - retrieval_score, faithfulness_score, reasoning_score: Component scores
@@ -516,8 +527,12 @@ def calculate_aggregate_scores(question_results: List[Dict[str, Any]], challenge
     # Calculate private score (average of private test questions)
     private_score = sum(r.get("overall_score", 0) for r in private_results) / n_private if private_results else 0.0
     
+    # Overall score is the BEST (max) of public and private scores - NOT weighted
+    # This gives participants credit for their best performance
+    overall_score = max(public_score, private_score) if (public_score > 0 or private_score > 0) else 0.0
+    
     return {
-        "overall_score": sum(r.get("overall_score", 0) for r in question_results) / n,
+        "overall_score": overall_score,
         "public_score": public_score,
         "private_score": private_score,
         "retrieval_score": sum(r.get("retrieval_score", 0) for r in question_results) / n,
