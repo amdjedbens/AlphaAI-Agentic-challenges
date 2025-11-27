@@ -12,6 +12,7 @@ from db.database import init_db
 from knowledge_base.router import router as kb_router
 from submissions.router import router as submissions_router
 from evaluation.router import router as evaluation_router
+from public.router import router as public_router
 
 
 @asynccontextmanager
@@ -47,6 +48,7 @@ app.add_middleware(
 app.include_router(kb_router, prefix="/api/kb", tags=["Knowledge Base"])
 app.include_router(submissions_router, prefix="/api/submissions", tags=["Submissions"])
 app.include_router(evaluation_router, prefix="/api/evaluation", tags=["Evaluation"])
+app.include_router(public_router, prefix="/api/public", tags=["Public API"])
 
 
 @app.get("/")

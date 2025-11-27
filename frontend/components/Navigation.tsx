@@ -20,6 +20,7 @@ export function Navigation() {
   const links = [
     { href: '/', label: 'Home' },
     { href: '/challenges', label: 'Challenges' },
+    { href: '/docs', label: 'Docs' },
     { href: '/submit', label: 'Submit' },
     { href: '/leaderboard', label: 'Leaderboard' },
   ];

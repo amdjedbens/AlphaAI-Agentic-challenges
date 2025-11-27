@@ -10,14 +10,39 @@
     "metadata": {"zone": "A", "category": "height", "section": "2"}
   },
   {
+    "id": "clause_A_2_downtown",
+    "content": "ZONE A DOWNTOWN CORE HEIGHT: Within the designated Downtown Core overlay (blocks 100-150), Zone A buildings may exceed the standard 6-story limit up to 10 stories or 120 feet, subject to architectural review. This provision applies only to properties fronting Main Street or Commerce Avenue.",
+    "metadata": {"zone": "A", "category": "height", "section": "2.2"}
+  },
+  {
+    "id": "clause_A_2_sunset",
+    "content": "ZONE A HEIGHT LIMIT (SUNSET PROVISION): The Downtown Core height bonus in section A.2.2 shall expire on December 31, 2023, unless renewed by City Council. After expiration, all Zone A properties revert to the 6-story maximum regardless of location.",
+    "metadata": {"zone": "A", "category": "height", "section": "2.3"}
+  },
+  {
     "id": "clause_A_3",
     "content": "ZONE A LOT COVERAGE: Maximum lot coverage in Zone A-Commercial shall be 80% of the total lot area. Green space or landscaping must comprise at least 10% of the lot.",
     "metadata": {"zone": "A", "category": "coverage", "section": "3"}
   },
   {
+    "id": "clause_A_3_green",
+    "content": "ZONE A GREEN SPACE (2022 AMENDMENT): To promote sustainability, Zone A properties must now maintain 15% green space or landscaping, increased from the previous 10% requirement. Existing buildings are exempt until major renovation or change of use occurs.",
+    "metadata": {"zone": "A", "category": "coverage", "section": "3.1"}
+  },
+  {
     "id": "clause_A_4",
     "content": "ZONE A PARKING: Commercial establishments in Zone A must provide 1 parking space per 300 square feet of floor area. Restaurants must provide 1 parking space per 4 seats plus 1 space per 2 employees.",
     "metadata": {"zone": "A", "category": "parking", "section": "4"}
+  },
+  {
+    "id": "clause_A_4_transit",
+    "content": "ZONE A PARKING REDUCTION: Properties within 1/4 mile of a designated transit stop may reduce required parking by 30%. Properties within 500 feet of public parking structures may reduce required parking by 50%. These reductions are cumulative up to a maximum 60% reduction.",
+    "metadata": {"zone": "A", "category": "parking", "section": "4.1"}
+  },
+  {
+    "id": "clause_A_4_conflict",
+    "content": "ZONE A MINIMUM PARKING: Notwithstanding any transit or proximity reductions in section A.4.1, all commercial establishments in Zone A must maintain a minimum of 5 parking spaces regardless of square footage or transit proximity. This minimum may NOT be reduced or waived.",
+    "metadata": {"zone": "A", "category": "parking", "section": "4.2"}
   },
   {
     "id": "clause_B_1",
@@ -35,9 +60,29 @@
     "metadata": {"zone": "B", "category": "height", "section": "2.1"}
   },
   {
+    "id": "clause_B_2_affordable",
+    "content": "ZONE B AFFORDABLE HOUSING BONUS: Residential projects in Zone B that include at least 20% affordable units may exceed height limits by one additional story, up to 5 stories for residential or 6 stories for mixed-use. This bonus applies even within 500 feet of R-1 boundaries.",
+    "metadata": {"zone": "B", "category": "height", "section": "2.2"}
+  },
+  {
+    "id": "clause_B_2_affordable_cap",
+    "content": "ZONE B HEIGHT CAP: Despite any bonuses granted under section B.2.2, no building in Zone B may exceed 65 feet in total height under any circumstances. Buildings seeking affordable housing bonuses near R-1 boundaries must still receive neighborhood compatibility review.",
+    "metadata": {"zone": "B", "category": "height", "section": "2.3"}
+  },
+  {
     "id": "clause_B_3",
     "content": "ZONE B SETBACKS: Front setback minimum 15 feet. Side setbacks minimum 10 feet each. Rear setback minimum 20 feet. Corner lots must maintain 15-foot setbacks on both street-facing sides.",
     "metadata": {"zone": "B", "category": "setbacks", "section": "3"}
+  },
+  {
+    "id": "clause_B_3_reduced",
+    "content": "ZONE B REDUCED SETBACKS: Buildings with ground-floor retail in Zone B may reduce front setback to 5 feet to create pedestrian-friendly streetscapes. Side setbacks may be reduced to 5 feet for buildings under 3 stories.",
+    "metadata": {"zone": "B", "category": "setbacks", "section": "3.1"}
+  },
+  {
+    "id": "clause_B_3_fire",
+    "content": "ZONE B FIRE SAFETY SETBACKS: Notwithstanding reduced setbacks in B.3.1, all buildings with residential units above the ground floor must maintain minimum 10-foot side setbacks for emergency vehicle access. This requirement supersedes pedestrian-friendly provisions when residential units are present.",
+    "metadata": {"zone": "B", "category": "setbacks", "section": "3.2"}
   },
   {
     "id": "clause_B_4",
@@ -48,6 +93,16 @@
     "id": "clause_R1_1",
     "content": "ZONE R-1 - SINGLE FAMILY RESIDENTIAL: Zone R-1 is exclusively for single-family detached dwellings. Each lot must contain only one primary dwelling unit. Home occupations are permitted with restrictions.",
     "metadata": {"zone": "R-1", "category": "general", "section": "1"}
+  },
+  {
+    "id": "clause_R1_1_adu",
+    "content": "ZONE R-1 ACCESSORY DWELLING UNITS (2023): In accordance with state housing mandates, Zone R-1 properties may now include one Accessory Dwelling Unit (ADU) in addition to the primary dwelling. ADUs shall not exceed 800 square feet or 50% of primary dwelling size, whichever is less.",
+    "metadata": {"zone": "R-1", "category": "general", "section": "1.1"}
+  },
+  {
+    "id": "clause_R1_1_adu_limit",
+    "content": "ZONE R-1 ADU RESTRICTIONS: The ADU provision in R1.1.1 does not apply to properties within 300 feet of designated historic structures, lots smaller than 6,000 square feet, or properties with existing non-conforming uses. ADUs in these cases require a conditional use permit.",
+    "metadata": {"zone": "R-1", "category": "general", "section": "1.2"}
   },
   {
     "id": "clause_R1_2",
@@ -65,6 +120,16 @@
     "metadata": {"zone": "R-1", "category": "home_business", "section": "3.1"}
   },
   {
+    "id": "clause_R1_3_cottage_update",
+    "content": "ZONE R-1 COTTAGE FOOD (2024 UPDATE): The revenue cap for cottage food operations has been increased to $75,000 annually. However, operations exceeding $50,000 must obtain additional commercial kitchen certification. Operations involving hot food preparation (not just baking) remain prohibited under all circumstances.",
+    "metadata": {"zone": "R-1", "category": "home_business", "section": "3.2"}
+  },
+  {
+    "id": "clause_R1_3_remote_work",
+    "content": "ZONE R-1 REMOTE WORK CLARIFICATION: Professional remote work (telecommuting) does not constitute a home occupation and requires no permit. However, if clients visit the home or if the resident receives business deliveries more than twice weekly, standard home occupation rules apply.",
+    "metadata": {"zone": "R-1", "category": "home_business", "section": "3.3"}
+  },
+  {
     "id": "clause_R1_4",
     "content": "ZONE R-1 LOT SIZE: Minimum lot size in Zone R-1 is 10,000 square feet (approximately 0.23 acres). Lot subdivision is permitted only if resulting parcels each meet the minimum lot size requirement.",
     "metadata": {"zone": "R-1", "category": "lot_size", "section": "4"}
@@ -75,9 +140,19 @@
     "metadata": {"zone": "R-2", "category": "general", "section": "1"}
   },
   {
+    "id": "clause_R2_1_density_bonus",
+    "content": "ZONE R-2 DENSITY BONUS: Projects providing 15% affordable units may increase the unit cap from 12 to 16 units. Projects providing 25% affordable units may increase to 20 units. Density bonuses require Planning Commission approval and traffic impact study.",
+    "metadata": {"zone": "R-2", "category": "general", "section": "1.1"}
+  },
+  {
     "id": "clause_R2_2",
     "content": "ZONE R-2 HEIGHT LIMITS: Buildings in Zone R-2 shall not exceed 3 stories or 40 feet in height for structures containing 4 or fewer units. Buildings with 5-12 units may reach 4 stories or 50 feet.",
     "metadata": {"zone": "R-2", "category": "height", "section": "2"}
+  },
+  {
+    "id": "clause_R2_2_stepback",
+    "content": "ZONE R-2 STEPBACK REQUIREMENT: Buildings exceeding 3 stories in Zone R-2 must incorporate a 10-foot stepback on all facades above the third floor to reduce visual impact on neighboring properties. This requirement may be waived for properties not adjacent to R-1 zones.",
+    "metadata": {"zone": "R-2", "category": "height", "section": "2.1"}
   },
   {
     "id": "clause_R2_3",
@@ -90,9 +165,19 @@
     "metadata": {"zone": "R-2", "category": "conversion", "section": "4"}
   },
   {
+    "id": "clause_R2_4_facade_exception",
+    "content": "ZONE R-2 FACADE MODIFICATIONS: Notwithstanding R2.4(c), exterior facade changes ARE permitted for conversions if: (a) changes are required for fire safety egress, (b) modifications are approved by the Architectural Review Board, or (c) the property is not within a designated historic neighborhood.",
+    "metadata": {"zone": "R-2", "category": "conversion", "section": "4.1"}
+  },
+  {
     "id": "clause_C1_1",
     "content": "ZONE C-1 - NEIGHBORHOOD COMMERCIAL: Zone C-1 is for small-scale commercial serving residential neighborhoods. Permitted uses include small retail, cafes, personal services, and professional offices under 5,000 square feet.",
     "metadata": {"zone": "C-1", "category": "general", "section": "1"}
+  },
+  {
+    "id": "clause_C1_1_size_exception",
+    "content": "ZONE C-1 SIZE LIMIT EXCEPTION: Grocery stores and pharmacies in Zone C-1 may exceed the 5,000 square foot limit up to 8,000 square feet if they are the only such establishment within a half-mile radius. Medical offices require conditional use permits regardless of size.",
+    "metadata": {"zone": "C-1", "category": "general", "section": "1.1"}
   },
   {
     "id": "clause_C1_2",
@@ -100,9 +185,24 @@
     "metadata": {"zone": "C-1", "category": "parking", "section": "2"}
   },
   {
+    "id": "clause_C1_2_shared",
+    "content": "ZONE C-1 SHARED PARKING: Adjacent C-1 properties may share parking facilities through a recorded shared parking agreement. Shared parking may reduce total required spaces by 20% if uses have complementary peak hours (e.g., office daytime, restaurant evening).",
+    "metadata": {"zone": "C-1", "category": "parking", "section": "2.1"}
+  },
+  {
     "id": "clause_HD_1",
     "content": "HERITAGE DISTRICT OVERLAY: Properties within the Heritage District are subject to additional architectural review. All exterior modifications visible from public rights-of-way require approval from the Historic Preservation Commission.",
     "metadata": {"zone": "Heritage", "category": "general", "section": "1"}
+  },
+  {
+    "id": "clause_HD_1_minor",
+    "content": "HERITAGE DISTRICT MINOR WORK: Routine maintenance and repairs using identical materials do not require Heritage Commission approval. Replacement of windows, doors, or roofing with non-identical materials requires staff-level review for properties not individually designated as historic landmarks.",
+    "metadata": {"zone": "Heritage", "category": "general", "section": "1.1"}
+  },
+  {
+    "id": "clause_HD_1_major",
+    "content": "HERITAGE DISTRICT MAJOR ALTERATIONS: Any work requiring a building permit within the Heritage District requires full Commission review. This includes all structural changes, additions, and demolitions. The Commission meets quarterly; emergency approvals may be granted by the Chair for safety-related work only.",
+    "metadata": {"zone": "Heritage", "category": "general", "section": "1.2"}
   },
   {
     "id": "clause_HD_2",
@@ -115,9 +215,24 @@
     "metadata": {"zone": "Heritage", "category": "solar", "section": "2.1"}
   },
   {
+    "id": "clause_HD_2_landmark",
+    "content": "HERITAGE DISTRICT SOLAR - LANDMARK EXCEPTION: Notwithstanding the 2024 Amendment, individually designated landmark buildings remain subject to the original HD.2 restrictions. Solar installations on landmarks require full Commission approval with a finding that the installation will not materially impair the historic character of the structure.",
+    "metadata": {"zone": "Heritage", "category": "solar", "section": "2.2"}
+  },
+  {
     "id": "clause_GP_1",
     "content": "FENCE REQUIREMENTS: Front yard fences in all residential zones shall not exceed 4 feet in height. Side and rear yard fences may be up to 6 feet. Privacy fences over 4 feet in front yards are prohibited.",
     "metadata": {"zone": "General", "category": "fences", "section": "1"}
+  },
+  {
+    "id": "clause_GP_1_corner",
+    "content": "FENCE REQUIREMENTS - CORNER LOTS: On corner lots, the fence height limit of 4 feet applies to both street-facing yards. The 'rear' yard for fence purposes is the yard opposite the primary entrance, even if it faces a street. Sight triangle areas at intersections may not have fences exceeding 3 feet.",
+    "metadata": {"zone": "General", "category": "fences", "section": "1.1"}
+  },
+  {
+    "id": "clause_GP_1_pool",
+    "content": "FENCE REQUIREMENTS - POOLS: Properties with swimming pools must have a minimum 5-foot fence with self-closing, self-latching gates around the pool area, per state safety code. This requirement supersedes the 4-foot front yard limit if the pool is in the front yard (which requires a variance to install).",
+    "metadata": {"zone": "General", "category": "fences", "section": "1.2"}
   },
   {
     "id": "clause_GP_2",
@@ -125,9 +240,24 @@
     "metadata": {"zone": "General", "category": "variance", "section": "2"}
   },
   {
+    "id": "clause_GP_2_admin",
+    "content": "ADMINISTRATIVE VARIANCES: Minor variances of 10% or less from dimensional requirements (setbacks, lot coverage, height) may be approved administratively by the Zoning Administrator without a public hearing. This provision does not apply to use variances or properties in the Heritage District.",
+    "metadata": {"zone": "General", "category": "variance", "section": "2.1"}
+  },
+  {
     "id": "clause_GP_3",
     "content": "NON-CONFORMING USES: Existing uses that do not conform to current zoning may continue as legal non-conforming uses. Expansion of non-conforming uses is prohibited. If discontinued for 12 months, non-conforming status is lost.",
     "metadata": {"zone": "General", "category": "nonconforming", "section": "3"}
+  },
+  {
+    "id": "clause_GP_3_rebuild",
+    "content": "NON-CONFORMING STRUCTURES - DAMAGE: If a non-conforming structure is damaged by fire, flood, or other casualty, it may be rebuilt to its previous non-conforming dimensions if: (a) damage is less than 50% of assessed value, (b) rebuilding begins within 18 months. Damage exceeding 50% requires conformance with current codes.",
+    "metadata": {"zone": "General", "category": "nonconforming", "section": "3.1"}
+  },
+  {
+    "id": "clause_GP_3_damage_conflict",
+    "content": "NON-CONFORMING REBUILD INSURANCE: For insurance purposes, 'damage' in GP.3.1 is calculated based on replacement cost, not assessed value. If replacement cost and assessed value differ, the higher standard applies. Properties with historic designation may rebuild regardless of damage percentage.",
+    "metadata": {"zone": "General", "category": "nonconforming", "section": "3.2"}
   },
   {
     "id": "clause_GP_4",
@@ -135,14 +265,73 @@
     "metadata": {"zone": "General", "category": "environmental", "section": "4"}
   },
   {
+    "id": "clause_GP_4_buffer",
+    "content": "ENVIRONMENTAL BUFFER ZONES: The 100-foot setback in GP.4 may be reduced to 50 feet with an approved stormwater management plan and native vegetation buffer. Agricultural structures may be exempt from environmental setbacks with an approved farm conservation plan.",
+    "metadata": {"zone": "General", "category": "environmental", "section": "4.1"}
+  },
+  {
     "id": "clause_R1_5",
     "content": "ZONE R-1 SUBDIVISION: Lot subdivision in Zone R-1 requires approval from the Planning Commission. The original lot must be at least 20,000 square feet (approximately 0.46 acres) to be subdivided into two conforming lots.",
     "metadata": {"zone": "R-1", "category": "subdivision", "section": "5"}
   },
   {
+    "id": "clause_R1_5_flag",
+    "content": "ZONE R-1 FLAG LOTS: Flag lot subdivisions (lots with narrow access corridors) are permitted in R-1 if the access corridor is at least 20 feet wide and the lot meets all other dimensional requirements. Flag lots may not be further subdivided under any circumstances.",
+    "metadata": {"zone": "R-1", "category": "subdivision", "section": "5.1"}
+  },
+  {
     "id": "clause_B_5",
     "content": "ZONE B RESIDENTIAL DENSITY: Maximum residential density in Zone B is 20 units per acre for multi-family projects. Mixed-use developments may increase density to 25 units per acre with ground-floor retail.",
     "metadata": {"zone": "B", "category": "density", "section": "5"}
+  },
+  {
+    "id": "clause_B_5_transit",
+    "content": "ZONE B TRANSIT-ORIENTED DENSITY: Zone B properties within 1/4 mile of rail stations or transit hubs may increase maximum density to 35 units per acre. Properties within 1/2 mile may increase to 30 units per acre. These bonuses may not be combined with affordable housing density bonuses.",
+    "metadata": {"zone": "B", "category": "density", "section": "5.1"}
+  },
+  {
+    "id": "clause_B_5_cap",
+    "content": "ZONE B ABSOLUTE DENSITY CAP: Regardless of any bonuses, overlays, or special provisions, no development in Zone B may exceed 40 units per acre. This cap applies to the gross site area, not net buildable area.",
+    "metadata": {"zone": "B", "category": "density", "section": "5.2"}
+  },
+  {
+    "id": "clause_outdoor_dining",
+    "content": "OUTDOOR DINING - ALL ZONES: Restaurants in commercial and mixed-use zones may provide outdoor dining on private property without additional permits if the seating does not exceed 20% of interior capacity. Outdoor dining on public sidewalks requires an encroachment permit and annual fee.",
+    "metadata": {"zone": "General", "category": "dining", "section": "1"}
+  },
+  {
+    "id": "clause_outdoor_dining_hours",
+    "content": "OUTDOOR DINING HOURS: Outdoor dining adjacent to residential zones must cease by 10:00 PM Sunday-Thursday and 11:00 PM Friday-Saturday. Amplified music or entertainment is prohibited in all outdoor dining areas at any time.",
+    "metadata": {"zone": "General", "category": "dining", "section": "1.1"}
+  },
+  {
+    "id": "clause_signage_general",
+    "content": "SIGNAGE - GENERAL PROVISIONS: Commercial signage in all zones is limited to 1 square foot per linear foot of building frontage, up to 100 square feet maximum. Illuminated signs may not flash, blink, or scroll. All signage requires a permit.",
+    "metadata": {"zone": "General", "category": "signage", "section": "1"}
+  },
+  {
+    "id": "clause_signage_exemption",
+    "content": "SIGNAGE EXEMPTIONS: The following are exempt from signage permits: (a) temporary real estate signs under 6 sq ft, (b) political signs during election periods, (c) holiday decorations displayed less than 45 days, (d) contractor signs during active construction. Exempt signs must still comply with size and location requirements.",
+    "metadata": {"zone": "General", "category": "signage", "section": "1.1"}
+  },
+  {
+    "id": "clause_ev_charging",
+    "content": "ELECTRIC VEHICLE CHARGING - NEW CONSTRUCTION: All new commercial buildings with 20+ parking spaces must provide EV charging infrastructure for at least 10% of spaces. Residential buildings with 10+ units must provide EV-ready wiring for 20% of parking spaces.",
+    "metadata": {"zone": "General", "category": "parking", "section": "5"}
+  },
+  {
+    "id": "clause_ev_existing",
+    "content": "ELECTRIC VEHICLE CHARGING - EXISTING BUILDINGS: Existing buildings adding EV charging stations may count EV spaces toward parking minimums at a 1.5:1 ratio (each EV space counts as 1.5 spaces). This incentive expires December 31, 2025.",
+    "metadata": {"zone": "General", "category": "parking", "section": "5.1"}
+  },
+  {
+    "id": "clause_short_term_rental",
+    "content": "SHORT-TERM RENTALS (VACATION RENTALS): Short-term rentals (less than 30 days) require a special permit in all residential zones. Permits are limited to owner-occupied properties. Non-owner-occupied short-term rentals are prohibited in R-1 and R-2 zones.",
+    "metadata": {"zone": "General", "category": "rentals", "section": "1"}
+  },
+  {
+    "id": "clause_short_term_rental_cap",
+    "content": "SHORT-TERM RENTAL CAP: No more than 5% of dwelling units on any block may be permitted as short-term rentals. Once the cap is reached, new applications will be waitlisted. Permits are not transferable upon sale of property.",
+    "metadata": {"zone": "General", "category": "rentals", "section": "1.1"}
   }
 ]
-

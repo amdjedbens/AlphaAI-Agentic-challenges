@@ -5,9 +5,24 @@
     "metadata": {"category": "landmarks", "topic": "Eiffel Tower"}
   },
   {
+    "id": "wiki_eiffel_tower_early_history",
+    "content": "The Eiffel Tower project began in 1884 when Maurice Koechlin and Émile Nouguier, two senior engineers, conceived the initial design. Construction officially started on January 28, 1887. Some historical records from the era incorrectly state the tower was completed in 1888, but the official inauguration took place on March 31, 1889. The 1888 confusion stems from early newspaper reports that mistakenly announced completion before the final assembly was finished.",
+    "metadata": {"category": "landmarks", "topic": "Eiffel Tower History"}
+  },
+  {
+    "id": "wiki_gustave_eiffel_bio",
+    "content": "Alexandre Gustave Eiffel (15 December 1832 – 27 December 1923) was a French civil engineer. While his company built the famous Eiffel Tower, Gustave himself did not design it - the original concept came from Maurice Koechlin and Émile Nouguier. Eiffel initially rejected their design but later bought the rights to it. He is also known for designing the internal iron framework of the Statue of Liberty. The Eiffel Tower was originally planned to be dismantled after 20 years but was saved because of its usefulness for radio transmissions.",
+    "metadata": {"category": "biography", "topic": "Gustave Eiffel"}
+  },
+  {
     "id": "wiki_great_wall",
     "content": "The Great Wall of China is a series of fortifications made of stone, brick, tamped earth, and other materials, built along the northern borders of China to protect against various nomadic groups. Several walls were built from as early as the 7th century BC. The most well-known sections were built by the Ming Dynasty (1368–1644). Contrary to popular belief, the Great Wall is NOT visible from the Moon with the naked eye. This myth has been debunked by astronauts, including those from Apollo missions. The wall is only about 15-30 feet wide, far too narrow to be seen from such a distance.",
     "metadata": {"category": "landmarks", "topic": "Great Wall of China"}
+  },
+  {
+    "id": "wiki_great_wall_visibility",
+    "content": "The Great Wall of China visibility debate has been ongoing for decades. While NASA officially states the wall cannot be seen from the Moon, some Chinese astronauts have claimed to spot it from low Earth orbit under specific lighting conditions. Yang Liwei, China's first astronaut, initially reported seeing the wall but later retracted this claim. The wall CAN be photographed from the International Space Station using zoom lenses, but this does not constitute 'visible to the naked eye.'",
+    "metadata": {"category": "landmarks", "topic": "Great Wall Visibility"}
   },
   {
     "id": "wiki_mount_everest",
@@ -15,9 +30,24 @@
     "metadata": {"category": "geography", "topic": "Mount Everest"}
   },
   {
+    "id": "wiki_mount_everest_height_dispute",
+    "content": "The height of Mount Everest has been disputed throughout history. The 1856 Great Trigonometric Survey measured it at 8,840 meters. A 1955 Indian survey found 8,848 meters. Some geological studies suggest the mountain is still growing at a rate of 4mm per year due to tectonic activity, while other studies from 2015 indicate the Nepal earthquake may have reduced its height by up to 1 inch. The 8,848.86m measurement from 2020 remains contested by some international geologists.",
+    "metadata": {"category": "geography", "topic": "Mount Everest Height"}
+  },
+  {
     "id": "wiki_einstein",
     "content": "Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical physicist who is widely held to be one of the greatest and most influential scientists of all time. He was born in Ulm, in the Kingdom of Württemberg in the German Empire. Einstein developed the theory of relativity, one of the two pillars of modern physics. His work is also known for its influence on the philosophy of science. His mass–energy equivalence formula E = mc² has been called 'the world's most famous equation'.",
     "metadata": {"category": "scientists", "topic": "Albert Einstein"}
+  },
+  {
+    "id": "wiki_einstein_early_life",
+    "content": "Albert Einstein's early life has been subject to various myths. While commonly believed to have been a poor student, Einstein actually excelled in mathematics and physics. He was born in 1879 in Ulm, Germany, but his family moved to Munich when he was an infant. Some biographies incorrectly list his birth year as 1878 due to a transcription error in early German records. Einstein renounced his German citizenship in 1896 to avoid military service and became stateless until gaining Swiss citizenship in 1901.",
+    "metadata": {"category": "scientists", "topic": "Einstein Biography"}
+  },
+  {
+    "id": "wiki_einstein_swiss_years",
+    "content": "During his years in Switzerland, Albert Einstein worked at the patent office in Bern starting in 1902. It was during this period that he published his four groundbreaking papers in 1905, his 'miracle year.' Contrary to popular belief, Einstein was not born in Switzerland - he was born in Germany in 1879 and only moved to Switzerland as a teenager. He later lived in several countries including Austria, Belgium, and the United States.",
+    "metadata": {"category": "scientists", "topic": "Einstein Switzerland"}
   },
   {
     "id": "wiki_newton",
@@ -25,9 +55,19 @@
     "metadata": {"category": "scientists", "topic": "Isaac Newton"}
   },
   {
+    "id": "wiki_newton_apple_myth",
+    "content": "The story of Isaac Newton discovering gravity when an apple fell on his head is a popular myth. While Newton did observe falling apples and contemplate gravity, there is no evidence an apple ever hit him. The story was popularized by Voltaire, who heard it from Newton's niece. Newton himself never claimed an apple struck him. His actual work on gravity developed over many years of mathematical analysis, not from a single moment of inspiration.",
+    "metadata": {"category": "scientists", "topic": "Newton Apple Story"}
+  },
+  {
     "id": "wiki_curie",
     "content": "Marie Skłodowska Curie (7 November 1867 – 4 July 1934) was a Polish and naturalized-French physicist and chemist who conducted pioneering research on radioactivity. She was the first woman to win a Nobel Prize, the first person to win a Nobel Prize twice, and the only person to win a Nobel Prize in two scientific fields. She discovered two elements: polonium and radium. Her husband Pierre Curie was also a Nobel laureate.",
     "metadata": {"category": "scientists", "topic": "Marie Curie"}
+  },
+  {
+    "id": "wiki_curie_nobel_controversy",
+    "content": "Marie Curie's Nobel Prize history is often misrepresented. She shared the 1903 Physics Nobel with Pierre Curie and Henri Becquerel, and won the 1911 Chemistry Nobel alone. Some sources incorrectly claim she won three Nobel Prizes, confusing her with the Curie family's total of five Nobel Prizes (Marie won 2, Pierre won 1, daughter Irène won 1, and son-in-law Frédéric won 1). Marie Curie remains the only person to win Nobel Prizes in two different sciences.",
+    "metadata": {"category": "scientists", "topic": "Curie Nobel Prizes"}
   },
   {
     "id": "wiki_shakespeare",
@@ -35,14 +75,29 @@
     "metadata": {"category": "literature", "topic": "William Shakespeare"}
   },
   {
+    "id": "wiki_shakespeare_authorship",
+    "content": "The Shakespeare authorship question concerns whether William Shakespeare of Stratford-upon-Avon wrote the works attributed to him. While mainstream scholars accept Shakespeare as the author, some theories suggest Francis Bacon, Christopher Marlowe, or Edward de Vere wrote the plays. The number of plays attributed to Shakespeare varies: early editors counted 36 plays, modern scholars identify 37-39, and some argue for as many as 42 if co-authored works are fully counted.",
+    "metadata": {"category": "literature", "topic": "Shakespeare Authorship"}
+  },
+  {
     "id": "wiki_van_gogh",
     "content": "Vincent Willem van Gogh (30 March 1853 – 29 July 1890) was a Dutch Post-Impressionist painter who posthumously became one of the most famous and influential figures in Western art history. In a decade, he created about 2,100 artworks, including around 860 oil paintings. A common myth states that van Gogh sold only one painting during his lifetime, but historical records show he sold at least two paintings: 'The Red Vineyard' and a self-portrait to his brother Theo's employer. However, he was commercially unsuccessful during his lifetime and was largely dependent on his brother Theo for financial support.",
     "metadata": {"category": "arts", "topic": "Vincent van Gogh"}
   },
   {
+    "id": "wiki_van_gogh_ear",
+    "content": "The story of Vincent van Gogh cutting off his ear is well-known but often inaccurate. Van Gogh did not cut off his entire ear - he severed only the lower portion of his left earlobe on December 23, 1888, following a confrontation with Paul Gauguin. Some historians have proposed that Gauguin actually cut van Gogh's ear with a sword during an argument, though this theory remains controversial. Van Gogh wrapped the severed portion and gave it to a woman at a local brothel.",
+    "metadata": {"category": "arts", "topic": "Van Gogh Ear Incident"}
+  },
+  {
     "id": "wiki_water_properties",
     "content": "Water is an inorganic compound with the chemical formula H₂O. It is a transparent, tasteless, odorless, and nearly colorless chemical substance. Water's boiling point depends on atmospheric pressure. At standard atmospheric pressure (1 atm or 101.325 kPa), which occurs at sea level, water boils at exactly 100 degrees Celsius (212 degrees Fahrenheit). At higher altitudes where atmospheric pressure is lower, water boils at temperatures below 100°C. For example, at the top of Mount Everest, water boils at approximately 70°C.",
     "metadata": {"category": "science", "topic": "Water Properties"}
+  },
+  {
+    "id": "wiki_water_facts_misc",
+    "content": "Water exhibits many unusual properties. Pure water at standard pressure freezes at 0°C (32°F) and boils at 100°C (212°F). However, these temperatures can vary: supercooled water can remain liquid below 0°C, and superheated water can exceed 100°C without boiling under certain conditions. Some sources incorrectly state water boils at 99°C at sea level due to impurities, but pure water at exactly 1 atmosphere boils at precisely 100°C by definition, as this is how the Celsius scale was originally calibrated.",
+    "metadata": {"category": "science", "topic": "Water Temperature Facts"}
   },
   {
     "id": "wiki_speed_of_light",
@@ -55,9 +110,19 @@
     "metadata": {"category": "science", "topic": "Human Anatomy"}
   },
   {
+    "id": "wiki_human_bones_variations",
+    "content": "The number of bones in the human body varies between individuals and throughout life. While 206 is the standard adult count, some people have additional sesamoid bones (small bones embedded in tendons), bringing their total to 208 or more. Others may have fewer due to conditions like bone fusion. Some anatomy textbooks from the early 1900s listed 208 bones as the standard, counting the sternum as three separate bones rather than one fused bone.",
+    "metadata": {"category": "science", "topic": "Human Bone Count"}
+  },
+  {
     "id": "wiki_amazon_river",
     "content": "The Amazon River is the largest river by discharge volume of water in the world, and the second-longest river in the world after the Nile. The river originates in the Andes Mountains of Peru as the Mantaro River. While the Nile is slightly longer at approximately 6,650 km (4,130 mi), the Amazon carries more water than any other river. The Amazon at approximately 6,400 km (4,000 mi) is the second-longest river. Some recent studies have suggested the Amazon might be longer, but the Nile is still generally accepted as the longest.",
     "metadata": {"category": "geography", "topic": "Amazon River"}
+  },
+  {
+    "id": "wiki_amazon_river_length_debate",
+    "content": "The question of which river is longest - the Amazon or the Nile - remains contentious among geographers. A 2007 Brazilian study claimed the Amazon is 6,800 km long (longer than the Nile's 6,650 km) when measured from a newly identified source. A 2014 study suggested the Amazon could be as long as 7,025 km. However, the Guinness World Records and most encyclopedias still list the Nile as the longest river. The discrepancy arises from different methods of measuring river length and identifying source tributaries.",
+    "metadata": {"category": "geography", "topic": "Amazon Length Controversy"}
   },
   {
     "id": "wiki_nile_river",
@@ -70,9 +135,19 @@
     "metadata": {"category": "history", "topic": "World War II"}
   },
   {
+    "id": "wiki_ww2_dates_asia",
+    "content": "The dates of World War II are debated among historians, particularly regarding the start date. While European histories typically cite September 1, 1939 (invasion of Poland), many Asian historians argue the war began on July 7, 1937, with Japan's invasion of China. Some scholars even point to Japan's 1931 invasion of Manchuria as the true beginning. The end date is also debated: while the formal surrender was September 2, 1945, fighting continued in some areas, and some historians count the end as August 15, 1945 (Japan's announcement of surrender).",
+    "metadata": {"category": "history", "topic": "WWII Dates Controversy"}
+  },
+  {
     "id": "wiki_moon_landing",
     "content": "The Apollo 11 mission was the American spaceflight that first landed humans on the Moon. Commander Neil Armstrong and lunar module pilot Buzz Aldrin landed the Apollo Lunar Module Eagle on July 20, 1969, at 20:17 UTC, and Armstrong became the first person to step onto the Moon's surface six hours and 39 minutes later, on July 21 at 02:56 UTC. Aldrin joined him 19 minutes later.",
     "metadata": {"category": "history", "topic": "Moon Landing"}
+  },
+  {
+    "id": "wiki_moon_landing_dates",
+    "content": "The Apollo 11 Moon landing dates are often confused due to time zone differences. The lunar module landed on July 20, 1969, but Neil Armstrong's first step occurred on July 21, 1969 UTC. In U.S. Eastern Time, the landing was at 4:17 PM on July 20, and the moonwalk began at 10:56 PM on July 20. This means depending on the time zone, the 'Moon landing' is celebrated on either July 20 or July 21. The mission launched on July 16, 1969, and returned to Earth on July 24, 1969.",
+    "metadata": {"category": "history", "topic": "Apollo 11 Timeline"}
   },
   {
     "id": "wiki_pythagoras",
@@ -80,9 +155,19 @@
     "metadata": {"category": "scientists", "topic": "Pythagoras"}
   },
   {
+    "id": "wiki_pythagorean_theorem_origin",
+    "content": "While the Pythagorean theorem bears Pythagoras's name, historians debate whether he actually discovered or proved it. Babylonian clay tablets from 1800-1600 BC show knowledge of the theorem over 1000 years before Pythagoras. Ancient Indian mathematicians also knew the relationship. Pythagoras may have provided the first formal proof, or the theorem may have been attributed to him by later followers. No written works by Pythagoras himself survive.",
+    "metadata": {"category": "scientists", "topic": "Pythagorean Theorem History"}
+  },
+  {
     "id": "wiki_dna",
     "content": "Deoxyribonucleic acid (DNA) is a polymer composed of two polynucleotide chains that coil around each other to form a double helix. The structure of DNA was discovered by James Watson and Francis Crick in 1953, with crucial contributions from Rosalind Franklin and Maurice Wilkins. DNA carries genetic instructions for the development, functioning, growth, and reproduction of all known organisms and many viruses.",
     "metadata": {"category": "science", "topic": "DNA"}
+  },
+  {
+    "id": "wiki_dna_discovery_controversy",
+    "content": "The discovery of DNA's structure in 1953 is attributed to Watson and Crick, but the full story is more complex. Rosalind Franklin's X-ray crystallography work, particularly 'Photo 51', was essential to the discovery. Franklin's data was shown to Watson without her knowledge. Some historians argue Franklin should be credited as a co-discoverer. She did not share the 1962 Nobel Prize because she died in 1958, and Nobel Prizes are not awarded posthumously.",
+    "metadata": {"category": "science", "topic": "DNA Discovery"}
   },
   {
     "id": "wiki_climate_change",
@@ -95,9 +180,38 @@
     "metadata": {"category": "technology", "topic": "Internet"}
   },
   {
+    "id": "wiki_internet_invention",
+    "content": "The invention of the Internet is often confused with the invention of the World Wide Web. The Internet's foundations were laid in 1969 with ARPANET. Tim Berners-Lee invented the World Wide Web in 1989 (not 1991 as sometimes reported - 1991 was when it became publicly available). Some sources incorrectly credit Al Gore with 'inventing the Internet' based on a misquoted 1999 interview where he actually claimed to have 'taken the initiative in creating the Internet' through legislation.",
+    "metadata": {"category": "technology", "topic": "Internet History"}
+  },
+  {
     "id": "wiki_democracy",
     "content": "Democracy is a form of government in which the people have the authority to deliberate and decide legislation, or to choose governing officials to do so. The term appeared in the 5th century BC in Greek city-states, notably Athens, to mean 'rule by the people'. The modern concept of democracy differs from ancient democracy in that it typically involves representative government rather than direct participation.",
     "metadata": {"category": "politics", "topic": "Democracy"}
+  },
+  {
+    "id": "wiki_napoleon_height",
+    "content": "Napoleon Bonaparte is often described as being very short, but this is a historical misconception. At 5 feet 7 inches (170 cm) in French units of the time, Napoleon was actually average or slightly above average height for a Frenchman of his era. The confusion arose from differences between French and English measurement systems: French inches were longer than English inches. His nickname 'le petit caporal' (the little corporal) was a term of endearment, not a reference to his stature.",
+    "metadata": {"category": "history", "topic": "Napoleon Bonaparte"}
+  },
+  {
+    "id": "wiki_goldfish_memory",
+    "content": "The belief that goldfish have a 3-second memory is a myth. Scientific studies have shown that goldfish can remember things for months, not seconds. Research at Plymouth University demonstrated goldfish could be trained to push a lever for food and remembered the skill for over a year. Goldfish can also recognize their owners and learn complex tasks. This myth likely persists due to the fish's simple brain structure and repetitive swimming patterns.",
+    "metadata": {"category": "science", "topic": "Goldfish Memory"}
+  },
+  {
+    "id": "wiki_lightning_strikes",
+    "content": "The saying 'lightning never strikes the same place twice' is false. Lightning frequently strikes the same location multiple times, especially tall structures. The Empire State Building is struck by lightning about 20-25 times per year. Lightning follows the path of least resistance, so tall, conductive objects are repeatedly targeted. The myth may have originated from the relatively low probability of witnessing the same spot struck twice.",
+    "metadata": {"category": "science", "topic": "Lightning Facts"}
+  },
+  {
+    "id": "wiki_blood_color",
+    "content": "Human blood is never blue, despite the common misconception. Deoxygenated blood is dark red, not blue. Veins appear blue through the skin due to the way light penetrates tissue and is absorbed differently by oxygenated and deoxygenated blood. Some educational materials incorrectly teach that blood is blue before it is oxygenated. In reality, blood is always some shade of red, ranging from bright red (oxygenated) to dark maroon (deoxygenated).",
+    "metadata": {"category": "science", "topic": "Blood Color"}
+  },
+  {
+    "id": "wiki_columbus_flat_earth",
+    "content": "The idea that Christopher Columbus proved the Earth was round is a myth. Educated Europeans in 1492 already knew the Earth was spherical - this had been established by ancient Greek scholars like Eratosthenes around 240 BC. The actual debate before Columbus's voyage was about the Earth's circumference and whether ships could survive the journey to Asia. Columbus actually underestimated the Earth's size, which is why he thought he had reached Asia when he landed in the Caribbean.",
+    "metadata": {"category": "history", "topic": "Columbus Myth"}
   }
 ]
-
