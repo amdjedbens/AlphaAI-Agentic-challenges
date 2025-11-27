@@ -433,7 +433,7 @@ export default function DocsPage() {
               </div>
               <div className="flex items-center gap-3">
                 <code className="text-[var(--accent-cyan)] font-bold">POST</code>
-                <code className="text-white font-mono text-sm md:text-base break-all select-all">https://squid-app-7q77b.ondigitalocean.app/api/kb/factcheck/search</code>
+                <code className="text-white font-mono text-sm md:text-base break-all select-all">https://squid-app-7q77b.ondigitalocean.app/api/api/kb/factcheck/search</code>
               </div>
             </div>
 
@@ -445,7 +445,7 @@ export default function DocsPage() {
               </div>
               <div className="flex items-center gap-3">
                 <code className="text-[var(--accent-cyan)] font-bold">POST</code>
-                <code className="text-white font-mono text-sm md:text-base break-all select-all">https://squid-app-7q77b.ondigitalocean.app/api/kb/legal/search</code>
+                <code className="text-white font-mono text-sm md:text-base break-all select-all">https://squid-app-7q77b.ondigitalocean.app/api/api/kb/legal/search</code>
               </div>
             </div>
           </div>

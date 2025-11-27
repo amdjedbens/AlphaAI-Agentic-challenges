@@ -9,7 +9,9 @@ import os
 from pathlib import Path
 
 # Use a persistent directory for database storage
-DB_DIR = os.getenv("DB_DIR", "/app/db")
+# Default to local directory when running outside Docker
+DEFAULT_DB_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "db_data")
+DB_DIR = os.getenv("DB_DIR", DEFAULT_DB_DIR)
 Path(DB_DIR).mkdir(parents=True, exist_ok=True)
 
 # Database file path within the persistent directory

@@ -42,7 +42,7 @@ from evaluation.judge import (
 )
 
 
-async def test_api_endpoint(api_url: str, challenge_id: str) -> List[Dict[str, Any]]:
+async def test_api_endpoint(api_url: str, challenge_id: str, kb_base_url: str = "http://localhost:8006") -> List[Dict[str, Any]]:
     """Test an API endpoint with all test questions."""
     questions = FACTCHECK_TEST_QUESTIONS if challenge_id == "factcheck" else LEGAL_TEST_QUESTIONS
     golden_answers = FACTCHECK_GOLDEN_ANSWERS if challenge_id == "factcheck" else LEGAL_GOLDEN_ANSWERS
@@ -52,6 +52,7 @@ async def test_api_endpoint(api_url: str, challenge_id: str) -> List[Dict[str, A
     print(f"\n{'='*70}")
     print(f"  Testing API: {api_url}")
     print(f"  Challenge: {challenge_id}")
+    print(f"  KB Base URL: {kb_base_url}")
     print(f"  Questions: {len(questions)}")
     print(f"{'='*70}\n")
     
@@ -65,7 +66,7 @@ async def test_api_endpoint(api_url: str, challenge_id: str) -> List[Dict[str, A
                 payload = {
                     "query" if challenge_id == "legal" else "claim": 
                         question.get("query", question.get("claim")),
-                    "kb_search_url": f"http://localhost:8006/api/kb/{challenge_id}/search"
+                    "kb_search_url": f"{kb_base_url}/api/kb/{challenge_id}/search"
                 }
                 
                 print(f"  📤 Sending request: {payload.get('query') or payload.get('claim')[:60]}...")
@@ -152,7 +153,7 @@ async def test_api_endpoint(api_url: str, challenge_id: str) -> List[Dict[str, A
     return question_results
 
 
-def test_python_file(file_path: str, challenge_id: str) -> List[Dict[str, Any]]:
+def test_python_file(file_path: str, challenge_id: str, kb_base_url: str = "http://localhost:8006") -> List[Dict[str, Any]]:
     """Test a Python file with all test questions."""
     questions = FACTCHECK_TEST_QUESTIONS if challenge_id == "factcheck" else LEGAL_TEST_QUESTIONS
     golden_answers = FACTCHECK_GOLDEN_ANSWERS if challenge_id == "factcheck" else LEGAL_GOLDEN_ANSWERS
@@ -162,6 +163,7 @@ def test_python_file(file_path: str, challenge_id: str) -> List[Dict[str, Any]]:
     print(f"\n{'='*70}")
     print(f"  Testing Python File: {file_path}")
     print(f"  Challenge: {challenge_id}")
+    print(f"  KB Base URL: {kb_base_url}")
     print(f"  Questions: {len(questions)}")
     print(f"{'='*70}\n")
     
@@ -190,7 +192,7 @@ print(json.dumps(result))
             
             try:
                 query = question.get("query", question.get("claim"))
-                search_url = f"http://localhost:8006/api/kb/{challenge_id}/search"
+                search_url = f"{kb_base_url}/api/kb/{challenge_id}/search"
                 
                 print(f"  📤 Running solve('{query[:60]}...', '{search_url}')")
                 
@@ -344,6 +346,12 @@ Examples:
         default="factcheck",
         help="Challenge type (default: factcheck)"
     )
+    parser.add_argument(
+        "--kb-base-url",
+        type=str,
+        default="http://localhost:8006",
+        help="Base URL for the knowledge base API (default: http://localhost:8006)"
+    )
     
     args = parser.parse_args()
     
@@ -354,24 +362,25 @@ Examples:
         parser.error("Cannot provide both --api-url and --python-file")
     
     # Check if backend KB is running
+    kb_base_url = args.kb_base_url.rstrip('/')
     try:
         async with httpx.AsyncClient(timeout=5.0) as client:
-            response = await client.get("http://localhost:8006/")
+            response = await client.get(f"{kb_base_url}/")
             if response.status_code != 200:
-                print("⚠️  Warning: Backend server at http://localhost:8006 may not be running correctly")
+                print(f"⚠️  Warning: Backend server at {kb_base_url} may not be running correctly")
     except Exception:
-        print("⚠️  Warning: Cannot connect to backend server at http://localhost:8006")
-        print("   Make sure the backend is running: cd backend && python -m uvicorn main:app --reload")
+        print(f"⚠️  Warning: Cannot connect to backend server at {kb_base_url}")
+        print("   Make sure the backend is running or use --kb-base-url to specify a remote server")
         print()
     
     # Run evaluation
     if args.api_url:
-        question_results = await test_api_endpoint(args.api_url, args.challenge)
+        question_results = await test_api_endpoint(args.api_url, args.challenge, kb_base_url)
     else:
         if not os.path.exists(args.python_file):
             print(f"❌ Error: File not found: {args.python_file}")
             sys.exit(1)
-        question_results = test_python_file(args.python_file, args.challenge)
+        question_results = test_python_file(args.python_file, args.challenge, kb_base_url)
     
     # Print summary
     print_summary(question_results, args.challenge)

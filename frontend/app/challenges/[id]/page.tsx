@@ -3,7 +3,8 @@ import { CodeBlock } from '@/components/CodeBlock';
 import { notFound } from 'next/navigation';
 
 // Production API URL (hardcoded for hackathon)
-const API_BASE_URL = 'https://squid-app-7q77b.ondigitalocean.app/api';
+// Note: DigitalOcean adds /api prefix, so actual path is /api/api/...
+const API_BASE_URL = 'https://squid-app-7q77b.ondigitalocean.app/api/api';
 
 // 🔒 CHALLENGE LOCK: Set to false when competition starts to reveal details
 const CHALLENGES_LOCKED = false;
@@ -28,7 +29,7 @@ const challengeData: Record<string, {
     difficulty: 'Beginner',
     description: 'Verify claims against a Wikipedia-style knowledge base.',
     theme: 'Research',
-    kb_endpoint: '/api/kb/factcheck/search',
+    kb_endpoint: '/api/api/kb/factcheck/search',
     metrics: ['Retrieval Recall', 'Verdict Accuracy', 'Hallucination Detection'],
     overview: `Your agent receives claims that need to be verified. Using our Wikipedia-style knowledge base, 
     your agent must search for relevant documents, analyze the evidence, and determine if each claim is 
@@ -60,7 +61,7 @@ const challengeData: Record<string, {
     difficulty: 'Medium',
     description: 'Answer zoning law questions requiring conflict resolution.',
     theme: 'Law / Compliance',
-    kb_endpoint: '/api/kb/legal/search',
+    kb_endpoint: '/api/api/kb/legal/search',
     metrics: ['Answer Faithfulness', 'Conflict Detection', 'Citation Accuracy'],
     overview: `Your agent serves as a legal clerk answering questions about the Alphaville Zoning Code. 
     The code contains intentionally conflicting rules that require careful analysis. Your agent must 

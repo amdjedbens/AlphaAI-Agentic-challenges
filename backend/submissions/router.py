@@ -28,6 +28,13 @@ from auth.team_keys import validate_team_key, get_all_team_keys
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Public KB URL for external participants (with double /api/api/ for DigitalOcean routing)
+# Falls back to localhost for local testing
+PUBLIC_KB_BASE_URL = os.getenv(
+    "PUBLIC_KB_BASE_URL", 
+    "https://squid-app-7q77b.ondigitalocean.app/api/api"
+)
+
 router = APIRouter()
 
 
@@ -403,10 +410,11 @@ async def evaluate_api_submission(
                     logger.info(f"Testing question {qid}")
                     
                     # Send request to participant's API
+                    # Use PUBLIC_KB_BASE_URL for external participants to call back
                     payload = {
                         "query" if challenge_id == "legal" else "claim": 
                             question.get("query", question.get("claim")),
-                        "kb_search_url": f"http://localhost:8006/api/kb/{challenge_id}/search"
+                        "kb_search_url": f"{PUBLIC_KB_BASE_URL}/kb/{challenge_id}/search"
                     }
                     
                     response = await client.post(api_url, json=payload)
