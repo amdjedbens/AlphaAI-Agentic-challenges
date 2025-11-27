@@ -70,10 +70,22 @@ export default function ChallengesPage() {
             </svg>
             <h2 className="text-2xl font-bold text-white">How Evaluation Works</h2>
           </div>
+          
+          {/* Best Score Highlight */}
+          <div className="mb-8 p-4 rounded-xl bg-gradient-to-r from-[var(--accent-cyan)]/10 to-[var(--accent-purple)]/10 border border-[var(--accent-cyan)]/30">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[var(--accent-cyan)] text-lg">★</span>
+              <span className="font-bold text-white">Best Score Wins!</span>
+            </div>
+            <p className="text-white/60 text-sm">
+              Your leaderboard score is the <strong className="text-[var(--accent-cyan)]">maximum</strong> of your public and private test scores — we reward your best performance!
+            </p>
+          </div>
+
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center md:text-left">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--accent-cyan)]/20 to-[var(--accent-purple)]/20 flex items-center justify-center text-[var(--accent-cyan)] mb-4 mx-auto md:mx-0">
-                <span className="font-bold text-xl">1</span>
+                <span className="font-bold text-xl">25%</span>
               </div>
               <h3 className="font-bold text-white mb-2">Retrieval Score</h3>
               <p className="text-sm text-white/60">
@@ -82,20 +94,20 @@ export default function ChallengesPage() {
             </div>
             <div className="text-center md:text-left">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--accent-purple)]/20 to-[var(--accent-magenta)]/20 flex items-center justify-center text-[var(--accent-purple)] mb-4 mx-auto md:mx-0">
-                <span className="font-bold text-xl">2</span>
+                <span className="font-bold text-xl">35%</span>
               </div>
-              <h3 className="font-bold text-white mb-2">Faithfulness Score</h3>
+              <h3 className="font-bold text-white mb-2">Answer Correctness</h3>
               <p className="text-sm text-white/60">
-                Is your answer grounded in the retrieved text? We detect hallucinations and made-up facts.
+                Is your answer correct? We evaluate verdict accuracy for factcheck and answer quality for legal.
               </p>
             </div>
             <div className="text-center md:text-left">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--accent-magenta)]/20 to-[var(--accent-cyan)]/20 flex items-center justify-center text-[var(--accent-magenta)] mb-4 mx-auto md:mx-0">
-                <span className="font-bold text-xl">3</span>
+                <span className="font-bold text-xl">40%</span>
               </div>
-              <h3 className="font-bold text-white mb-2">Reasoning Score</h3>
+              <h3 className="font-bold text-white mb-2">Faithfulness + Reasoning</h3>
               <p className="text-sm text-white/60">
-                Did your agent reason through the problem correctly? We evaluate the thought process and final answer quality.
+                Is your answer grounded in documents? Did you reason through it correctly? No hallucinations allowed!
               </p>
             </div>
           </div>

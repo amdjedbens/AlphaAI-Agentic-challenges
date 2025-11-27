@@ -153,7 +153,12 @@ export default function LeaderboardPage() {
                 <tr className="border-b border-[var(--accent-cyan)]/10 bg-[#0b0f2b]/50">
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white/40">Rank</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white/40">Team</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-white/40">Public Score</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-white/40">
+                    <span className="flex items-center justify-end gap-2">
+                      Best Score
+                      <span className="text-xs text-[var(--accent-cyan)]">★</span>
+                    </span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -188,19 +193,33 @@ export default function LeaderboardPage() {
 
         {/* Scoring Info */}
         <div className="card p-8 mt-8">
-          <div className="flex items-center gap-3 mb-8">
+          <div className="flex items-center gap-3 mb-6">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--accent-cyan)" className="star-glow">
               <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
             </svg>
-            <h2 className="text-xl font-bold text-white">Scoring Breakdown</h2>
+            <h2 className="text-xl font-bold text-white">Scoring System</h2>
           </div>
+          
+          {/* Best Score Explanation */}
+          <div className="mb-8 p-4 rounded-xl bg-gradient-to-r from-[var(--accent-cyan)]/10 to-[var(--accent-purple)]/10 border border-[var(--accent-cyan)]/30">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-[var(--accent-cyan)] text-lg">★</span>
+              <span className="font-bold text-white">Best Score = Max(Public, Private)</span>
+            </div>
+            <p className="text-white/60 text-sm">
+              Your leaderboard ranking is based on your <strong className="text-[var(--accent-cyan)]">best performance</strong> — 
+              the maximum of your public and private test scores. No weighted average, just your highest score!
+            </p>
+          </div>
+
+          <h3 className="font-semibold text-white/80 mb-4">Component Weights</h3>
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center p-4 rounded-xl bg-[var(--accent-cyan)]/5 border border-[var(--accent-cyan)]/20">
-              <div className="text-3xl font-black text-[var(--accent-cyan)] mb-2">20%</div>
+              <div className="text-3xl font-black text-[var(--accent-cyan)] mb-2">25%</div>
               <div className="text-sm text-white/60">Retrieval Score</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-[var(--accent-purple)]/5 border border-[var(--accent-purple)]/20">
-              <div className="text-3xl font-black text-[var(--accent-purple)] mb-2">30%</div>
+              <div className="text-3xl font-black text-[var(--accent-purple)] mb-2">35%</div>
               <div className="text-sm text-white/60">Answer Correctness</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
@@ -208,7 +227,7 @@ export default function LeaderboardPage() {
               <div className="text-sm text-white/60">Faithfulness</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
-              <div className="text-3xl font-black text-amber-400 mb-2">25%</div>
+              <div className="text-3xl font-black text-amber-400 mb-2">15%</div>
               <div className="text-sm text-white/60">Reasoning Quality</div>
             </div>
           </div>
