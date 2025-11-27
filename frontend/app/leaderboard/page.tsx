@@ -27,6 +27,15 @@ interface LeaderboardResponse {
   [key: string]: ChallengeLeaderboard;
 }
 
+// Combined entry showing best score
+interface BestScoreEntry {
+  teamId: number;
+  teamName: string;
+  bestScore: number;
+  publicScore: number;
+  privateScore: number;
+}
+
 export default function LeaderboardPage() {
   const [selectedChallenge, setSelectedChallenge] = useState('factcheck');
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardResponse | null>(null);
@@ -60,7 +69,46 @@ export default function LeaderboardPage() {
     }
   };
 
-  const currentLeaderboard = leaderboardData ? leaderboardData[selectedChallenge]?.public || [] : [];
+  // Compute best scores by merging public and private data
+  const currentLeaderboard: BestScoreEntry[] = (() => {
+    if (!leaderboardData) return [];
+    
+    const challengeData = leaderboardData[selectedChallenge];
+    if (!challengeData) return [];
+    
+    const publicEntries = challengeData.public || [];
+    const privateEntries = challengeData.private || [];
+    
+    // Create a map of teamId -> best score data
+    const teamMap = new Map<number, BestScoreEntry>();
+    
+    // Process public entries
+    for (const entry of publicEntries) {
+      const score = parseFloat(entry.displayScore) || 0;
+      teamMap.set(entry.teamId, {
+        teamId: entry.teamId,
+        teamName: entry.teamName,
+        bestScore: score,
+        publicScore: score,
+        privateScore: 0,
+      });
+    }
+    
+    // Process private entries and compute best score
+    for (const entry of privateEntries) {
+      const privateScore = parseFloat(entry.displayScore) || 0;
+      const existing = teamMap.get(entry.teamId);
+      
+      if (existing) {
+        existing.privateScore = privateScore;
+        existing.bestScore = Math.max(existing.publicScore, privateScore);
+      }
+      // Note: private entries don't have teamName, so we rely on public data
+    }
+    
+    // Convert to array and sort by best score (descending)
+    return Array.from(teamMap.values()).sort((a, b) => b.bestScore - a.bestScore);
+  })();
 
   const getRankStyle = (rank: number) => {
     switch (rank) {
@@ -179,7 +227,7 @@ export default function LeaderboardPage() {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <span className="text-xl font-bold text-[var(--accent-cyan)]">
-                          {parseFloat(entry.displayScore).toFixed(4)}
+                          {entry.bestScore.toFixed(4)}
                         </span>
                         <span className="text-white/40">/10</span>
                       </td>
