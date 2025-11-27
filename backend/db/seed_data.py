@@ -12,36 +12,94 @@ from db.database import SessionLocal, Submission, EvaluationResult, LeaderboardE
 
 
 # This is the EXACT data that should be in the database
-# From aa.txt - DO NOT modify unless you want to change initial state
+# UPDATED: Include ALL competition data so it survives deployments
+# CLEANED: One entry per team with their BEST score
+# Last updated: 2025-11-28
 INITIAL_DATA = {
     "factcheck": {
         "public": [
             {
                 "teamId": 1,
+                "teamName": "w-mb3d",
+                "displayScore": "9.85000"
+            },
+            {
+                "teamId": 2,
+                "teamName": "itc",
+                "displayScore": "7.61667"
+            },
+            {
+                "teamId": 3,
+                "teamName": "wanodevs",
+                "displayScore": "2.31667"
+            },
+            {
+                "teamId": 4,
                 "teamName": "data-divas",
-                "displayScore": "0.00000"
+                "displayScore": "1.33333"
             }
         ],
         "private": [
             {
                 "teamId": 1,
-                "submissionId": 2,
+                "submissionId": 6,
                 "rank": 1,
+                "displayScore": "9.85000"
+            },
+            {
+                "teamId": 2,
+                "submissionId": 13,
+                "rank": 2,
+                "displayScore": "7.17500"
+            },
+            {
+                "teamId": 3,
+                "submissionId": 10,
+                "rank": 3,
+                "displayScore": "2.52500"
+            },
+            {
+                "teamId": 4,
+                "submissionId": 2,
+                "rank": 4,
                 "displayScore": "1.33333"
             }
         ]
     },
     "legal": {
-        "public": [],
-        "private": []
+        "public": [
+            {
+                "teamId": 1,
+                "teamName": "w-mb3d",
+                "displayScore": "9.35000"
+            },
+            {
+                "teamId": 5,
+                "teamName": "data-divas",
+                "displayScore": "0.45000"
+            }
+        ],
+        "private": [
+            {
+                "teamId": 1,
+                "submissionId": 20,
+                "rank": 1,
+                "displayScore": "9.35000"
+            },
+            {
+                "teamId": 5,
+                "submissionId": 17,
+                "rank": 2,
+                "displayScore": "0.45000"
+            }
+        ]
     }
 }
 
 # Expected result after seeding:
-# - 1 team: "data-divas" 
-# - 1 submission: id=2, factcheck challenge
-# - Public score: 0.00000
-# - Private score: 1.33333
+# - Factcheck: w-mb3d (9.85), itc (7.61), wanodevs (2.31), data-divas (1.33)
+# - Legal: data-divas (0.45)
+# This data is restored on EVERY fresh deployment
 
 
 def parse_score(score_str: str) -> float:
@@ -52,16 +110,36 @@ def parse_score(score_str: str) -> float:
         return 0.0
 
 
-def seed_initial_data(db, json_data: Optional[dict] = None):
+def seed_initial_data(db, json_data: Optional[dict] = None, force: bool = False):
     """
-    Seed initial leaderboard data if database is empty.
-    Only seeds if no leaderboard entries exist.
+    Seed initial leaderboard data.
+    If force=True, clears existing data and re-seeds.
+    Otherwise, only seeds if no leaderboard entries exist.
     """
     # Check if database already has data
     existing_entries = db.query(LeaderboardEntry).count()
-    if existing_entries > 0:
-        print("ℹ️  Database already contains data, skipping seed.")
-        return False
+    
+    if existing_entries > 0 and not force:
+        # Check if we have the expected teams - if not, force re-seed
+        expected_teams = ["w-mb3d", "itc", "wanodevs"]  # Top teams that should exist
+        for team in expected_teams:
+            exists = db.query(LeaderboardEntry).filter(
+                LeaderboardEntry.team_name == team
+            ).first()
+            if exists:
+                print(f"ℹ️  Database already contains competition data ({team} found), skipping seed.")
+                return False
+        
+        # Expected teams not found - force re-seed
+        print("⚠️  Expected competition data not found. Forcing re-seed...")
+        force = True
+    
+    if force and existing_entries > 0:
+        print("🗑️  Clearing existing leaderboard data...")
+        db.query(LeaderboardEntry).delete()
+        db.query(EvaluationResult).delete()
+        db.query(Submission).delete()
+        db.commit()
     
     # Use provided data or default
     data = json_data or INITIAL_DATA

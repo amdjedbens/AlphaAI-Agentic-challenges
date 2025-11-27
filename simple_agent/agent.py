@@ -7,8 +7,8 @@ import os
 import json
 from openai import OpenAI
 
-# Configuration
-OPENAI_API_KEY = "os.getenv("OPENAI_API_KEY")"
+# Configuration - Use environment variable for API key
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
