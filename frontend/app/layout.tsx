@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Inter, Inria_Sans } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
+import { WelcomePopup } from "@/components/WelcomePopup";
 
 const poppins = Poppins({
   variable: "--font-geist-sans",
@@ -44,6 +45,7 @@ export default function RootLayout({
         <main className="pt-20">
           {children}
         </main>
+        <WelcomePopup />
       </body>
     </html>
   );

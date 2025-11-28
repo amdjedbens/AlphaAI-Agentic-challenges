@@ -70,6 +70,7 @@ export default function LeaderboardPage() {
   };
 
   // Compute best scores by merging public and private data
+  // Deduplicate by team NAME and keep only the highest score for each team
   const currentLeaderboard: BestScoreEntry[] = (() => {
     if (!leaderboardData) return [];
     
@@ -79,31 +80,45 @@ export default function LeaderboardPage() {
     const publicEntries = challengeData.public || [];
     const privateEntries = challengeData.private || [];
     
-    // Create a map of teamId -> best score data
-    const teamMap = new Map<number, BestScoreEntry>();
+    // Create a map of teamName -> best score data (deduplicate by name)
+    const teamMap = new Map<string, BestScoreEntry>();
+    // Also track teamId -> teamName for private entries lookup
+    const teamIdToName = new Map<number, string>();
     
-    // Process public entries
+    // Process public entries - keep highest score per team name
     for (const entry of publicEntries) {
       const score = parseFloat(entry.displayScore) || 0;
-      teamMap.set(entry.teamId, {
-        teamId: entry.teamId,
-        teamName: entry.teamName,
-        bestScore: score,
-        publicScore: score,
-        privateScore: 0,
-      });
+      const teamName = entry.teamName;
+      teamIdToName.set(entry.teamId, teamName);
+      
+      const existing = teamMap.get(teamName);
+      if (!existing || score > existing.publicScore) {
+        teamMap.set(teamName, {
+          teamId: entry.teamId,
+          teamName: teamName,
+          bestScore: existing ? Math.max(existing.bestScore, score) : score,
+          publicScore: score,
+          privateScore: existing?.privateScore || 0,
+        });
+      }
     }
     
     // Process private entries and compute best score
     for (const entry of privateEntries) {
       const privateScore = parseFloat(entry.displayScore) || 0;
-      const existing = teamMap.get(entry.teamId);
+      const teamName = teamIdToName.get(entry.teamId);
       
-      if (existing) {
-        existing.privateScore = privateScore;
-        existing.bestScore = Math.max(existing.publicScore, privateScore);
+      if (teamName) {
+        const existing = teamMap.get(teamName);
+        if (existing) {
+          // Keep the highest private score
+          if (privateScore > existing.privateScore) {
+            existing.privateScore = privateScore;
+          }
+          // Update best score to be max of all scores
+          existing.bestScore = Math.max(existing.publicScore, existing.privateScore);
+        }
       }
-      // Note: private entries don't have teamName, so we rely on public data
     }
     
     // Convert to array and sort by best score (descending)

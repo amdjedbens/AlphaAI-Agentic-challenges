@@ -29,7 +29,7 @@ const challengeData: Record<string, {
     difficulty: 'Beginner',
     description: 'Verify claims against a Wikipedia-style knowledge base.',
     theme: 'Research',
-    kb_endpoint: '/api/api/kb/factcheck/search',
+    kb_endpoint: 'https://squid-app-7q77b.ondigitalocean.app/api/api/kb/factcheck/search',
     metrics: ['Retrieval Recall', 'Verdict Accuracy', 'Hallucination Detection'],
     overview: `Your agent receives claims that need to be verified. Using our Wikipedia-style knowledge base, 
     your agent must search for relevant documents, analyze the evidence, and determine if each claim is 
@@ -61,7 +61,7 @@ const challengeData: Record<string, {
     difficulty: 'Medium',
     description: 'Answer zoning law questions requiring conflict resolution.',
     theme: 'Law / Compliance',
-    kb_endpoint: '/api/api/kb/legal/search',
+    kb_endpoint: 'https://squid-app-7q77b.ondigitalocean.app/api/api/kb/legal/search',
     metrics: ['Answer Faithfulness', 'Conflict Detection', 'Citation Accuracy'],
     overview: `Your agent serves as a legal clerk answering questions about the Alphaville Zoning Code. 
     The code contains intentionally conflicting rules that require careful analysis. Your agent must 
@@ -262,7 +262,7 @@ export default async function ChallengePage({ params }: { params: Promise<{ id: 
             </div>
             <div className="flex items-center gap-3 p-4 rounded-lg bg-[#0b0f2b] border border-[var(--accent-cyan)]/20">
               <code className="text-[var(--accent-cyan)] font-bold text-lg">POST</code>
-              <code className="text-white font-mono text-lg break-all">{API_BASE_URL}{challenge.kb_endpoint}</code>
+              <code className="text-white font-mono text-lg break-all">{challenge.kb_endpoint}</code>
             </div>
             <p className="text-white/50 text-sm mt-3">
               💡 <strong className="text-white/70">Note:</strong> This URL is automatically passed to your <code className="text-[var(--accent-cyan)]">/solve</code> endpoint as <code className="text-[var(--accent-cyan)]">kb_search_url</code> during evaluation.
