@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 
 // Production API URL (hardcoded for hackathon)
 // Note: DigitalOcean adds /api prefix, so actual path is /api/api/...
-const API_BASE_URL = 'https://squid-app-7q77b.ondigitalocean.app/api/api';
+const API_BASE_URL = 'https://backend-app-9a62n.ondigitalocean.app';
 
 // 🔒 CHALLENGE LOCK: Set to false when competition starts to reveal details
 const CHALLENGES_LOCKED = false;
@@ -29,7 +29,7 @@ const challengeData: Record<string, {
     difficulty: 'Beginner',
     description: 'Verify claims against a Wikipedia-style knowledge base.',
     theme: 'Research',
-    kb_endpoint: 'https://squid-app-7q77b.ondigitalocean.app/api/api/kb/factcheck/search',
+    kb_endpoint: 'https://backend-app-9a62n.ondigitalocean.app/api/kb/factcheck/search',
     metrics: ['Retrieval Recall', 'Verdict Accuracy', 'Hallucination Detection'],
     overview: `Your agent receives claims that need to be verified. Using our Wikipedia-style knowledge base, 
     your agent must search for relevant documents, analyze the evidence, and determine if each claim is 
@@ -61,7 +61,7 @@ const challengeData: Record<string, {
     difficulty: 'Medium',
     description: 'Answer zoning law questions requiring conflict resolution.',
     theme: 'Law / Compliance',
-    kb_endpoint: 'https://squid-app-7q77b.ondigitalocean.app/api/api/kb/legal/search',
+    kb_endpoint: 'https://backend-app-9a62n.ondigitalocean.app/api/kb/legal/search',
     metrics: ['Answer Faithfulness', 'Conflict Detection', 'Citation Accuracy'],
     overview: `Your agent serves as a legal clerk answering questions about the Alphaville Zoning Code. 
     The code contains intentionally conflicting rules that require careful analysis. Your agent must 
@@ -135,10 +135,10 @@ export default async function ChallengePage({ params }: { params: Promise<{ id: 
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
-            
+
             <h2 className="text-3xl font-bold text-white mb-4">Challenge Locked</h2>
             <p className="text-white/60 text-lg mb-8 max-w-md mx-auto">
-              This challenge will be unlocked when the competition begins. 
+              This challenge will be unlocked when the competition begins.
               Get ready to build your RAG agent!
             </p>
 
@@ -251,7 +251,7 @@ export default async function ChallengePage({ params }: { params: Promise<{ id: 
             </svg>
             <h2 className="text-2xl font-bold text-white">Knowledge Base API</h2>
           </div>
-          
+
           {/* Highlighted KB URL */}
           <div className="mb-6 p-6 rounded-xl bg-gradient-to-r from-[var(--accent-cyan)]/10 to-[var(--accent-purple)]/10 border-2 border-[var(--accent-cyan)]/40">
             <div className="flex items-center gap-2 mb-3">

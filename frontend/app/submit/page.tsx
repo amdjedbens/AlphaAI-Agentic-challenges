@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { CodeBlock } from '@/components/CodeBlock';
 
 // Production API URL (hardcoded for hackathon)
-const API_BASE_URL = 'https://squid-app-7q77b.ondigitalocean.app/api';
+const API_BASE_URL = 'https://backend-app-9a62n.ondigitalocean.app';
 
 function SubmitForm() {
   const searchParams = useSearchParams();
@@ -44,14 +44,14 @@ function SubmitForm() {
       try {
         const formData = new FormData();
         formData.append('team_key', teamKey);
-        
+
         const response = await fetch(`${API_BASE_URL}/api/submissions/validate-key`, {
           method: 'POST',
           body: formData,
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
           setTeamName(data.team_name);
           setKeyError(null);
@@ -153,9 +153,8 @@ function SubmitForm() {
                   onChange={(e) => setTeamKey(e.target.value)}
                   required
                   placeholder="Enter your team key"
-                  className={`w-full px-4 py-3 rounded-xl pr-10 ${
-                    teamName ? 'border-emerald-500/50' : keyError ? 'border-red-500/50' : ''
-                  }`}
+                  className={`w-full px-4 py-3 rounded-xl pr-10 ${teamName ? 'border-emerald-500/50' : keyError ? 'border-red-500/50' : ''
+                    }`}
                 />
                 {isValidatingKey && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -220,8 +219,8 @@ function SubmitForm() {
               <p className="text-sm text-white/40 mt-2">
                 Your endpoint must accept POST requests and return the expected JSON format.
               </p>
-              <a 
-                href="/docs#ngrok-setup" 
+              <a
+                href="/docs#ngrok-setup"
                 className="text-sm text-[var(--accent-cyan)] hover:underline mt-1 inline-flex items-center gap-1"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -233,21 +232,21 @@ function SubmitForm() {
 
             {/* Important Warning */}
             <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                <div className="flex items-start gap-3">
-                  <svg className="w-6 h-6 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  <div>
-                    <h4 className="text-amber-400 font-semibold mb-1">⚠️ Before You Submit</h4>
-                    <ul className="text-amber-300/80 text-sm space-y-1">
-                      <li>✓ Double-check your URL is accessible from the internet</li>
-                      <li>✓ Test it by opening the URL in your browser first</li>
-                      <li>✓ <strong>Keep your server AND ngrok running</strong> for 5-10 minutes</li>
-                      <li>✓ Don&apos;t close your terminal until evaluation completes</li>
-                    </ul>
-                  </div>
+              <div className="flex items-start gap-3">
+                <svg className="w-6 h-6 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div>
+                  <h4 className="text-amber-400 font-semibold mb-1">⚠️ Before You Submit</h4>
+                  <ul className="text-amber-300/80 text-sm space-y-1">
+                    <li>✓ Double-check your URL is accessible from the internet</li>
+                    <li>✓ Test it by opening the URL in your browser first</li>
+                    <li>✓ <strong>Keep your server AND ngrok running</strong> for 5-10 minutes</li>
+                    <li>✓ Don&apos;t close your terminal until evaluation completes</li>
+                  </ul>
                 </div>
               </div>
+            </div>
 
             {/* Submit Button */}
             <button
@@ -271,11 +270,10 @@ function SubmitForm() {
 
           {/* Result */}
           {result && (
-            <div className={`mt-6 p-4 rounded-xl ${
-              result.success 
-                ? 'bg-emerald-500/10 border border-emerald-500/30' 
+            <div className={`mt-6 p-4 rounded-xl ${result.success
+                ? 'bg-emerald-500/10 border border-emerald-500/30'
                 : 'bg-red-500/10 border border-red-500/30'
-            }`}>
+              }`}>
               <p className={result.success ? 'text-emerald-400' : 'text-red-400'}>
                 {result.message}
               </p>

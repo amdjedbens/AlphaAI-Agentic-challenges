@@ -1,5 +1,5 @@
 // Production API URL (hardcoded for hackathon)
-const API_BASE_URL = 'https://squid-app-7q77b.ondigitalocean.app/api';
+const API_BASE_URL = 'https://backend-app-9a62n.ondigitalocean.app';
 
 export interface Challenge {
   id: string;
@@ -131,7 +131,7 @@ export async function submitPythonFile(
 export async function validateTeamKey(teamKey: string): Promise<{ valid: boolean; team_name: string }> {
   const formData = new FormData();
   formData.append('team_key', teamKey);
-  
+
   const res = await fetch(`${API_BASE_URL}/api/submissions/validate-key`, {
     method: 'POST',
     body: formData,

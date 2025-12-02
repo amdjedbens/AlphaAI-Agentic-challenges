@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 
 // Production API URL (hardcoded for hackathon)
-const API_BASE_URL = 'https://squid-app-7q77b.ondigitalocean.app/api';
+const API_BASE_URL = 'https://backend-app-9a62n.ondigitalocean.app';
 
 interface PublicLeaderboardEntry {
   teamId: number;
@@ -73,24 +73,24 @@ export default function LeaderboardPage() {
   // Deduplicate by team NAME and keep only the highest score for each team
   const currentLeaderboard: BestScoreEntry[] = (() => {
     if (!leaderboardData) return [];
-    
+
     const challengeData = leaderboardData[selectedChallenge];
     if (!challengeData) return [];
-    
+
     const publicEntries = challengeData.public || [];
     const privateEntries = challengeData.private || [];
-    
+
     // Create a map of teamName -> best score data (deduplicate by name)
     const teamMap = new Map<string, BestScoreEntry>();
     // Also track teamId -> teamName for private entries lookup
     const teamIdToName = new Map<number, string>();
-    
+
     // Process public entries - keep highest score per team name
     for (const entry of publicEntries) {
       const score = parseFloat(entry.displayScore) || 0;
       const teamName = entry.teamName;
       teamIdToName.set(entry.teamId, teamName);
-      
+
       const existing = teamMap.get(teamName);
       if (!existing || score > existing.publicScore) {
         teamMap.set(teamName, {
@@ -102,12 +102,12 @@ export default function LeaderboardPage() {
         });
       }
     }
-    
+
     // Process private entries and compute best score
     for (const entry of privateEntries) {
       const privateScore = parseFloat(entry.displayScore) || 0;
       const teamName = teamIdToName.get(entry.teamId);
-      
+
       if (teamName) {
         const existing = teamMap.get(teamName);
         if (existing) {
@@ -120,7 +120,7 @@ export default function LeaderboardPage() {
         }
       }
     }
-    
+
     // Convert to array and sort by best score (descending)
     return Array.from(teamMap.values()).sort((a, b) => b.bestScore - a.bestScore);
   })();
@@ -172,8 +172,8 @@ export default function LeaderboardPage() {
           <button
             onClick={() => setSelectedChallenge('factcheck')}
             className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all duration-300 ${selectedChallenge === 'factcheck'
-                ? 'bg-gradient-to-r from-[var(--accent-cyan)] to-[#00d9c7] text-[#0b0f2b]'
-                : 'text-white/60 hover:text-white hover:bg-white/5'
+              ? 'bg-gradient-to-r from-[var(--accent-cyan)] to-[#00d9c7] text-[#0b0f2b]'
+              : 'text-white/60 hover:text-white hover:bg-white/5'
               }`}
           >
             <span className="hidden sm:inline">The </span>Fact-Check Spider
@@ -181,8 +181,8 @@ export default function LeaderboardPage() {
           <button
             onClick={() => setSelectedChallenge('legal')}
             className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all duration-300 ${selectedChallenge === 'legal'
-                ? 'bg-gradient-to-r from-[var(--accent-cyan)] to-[#00d9c7] text-[#0b0f2b]'
-                : 'text-white/60 hover:text-white hover:bg-white/5'
+              ? 'bg-gradient-to-r from-[var(--accent-cyan)] to-[#00d9c7] text-[#0b0f2b]'
+              : 'text-white/60 hover:text-white hover:bg-white/5'
               }`}
           >
             <span className="hidden sm:inline">The </span>Legal Clerk
@@ -262,7 +262,7 @@ export default function LeaderboardPage() {
             </svg>
             <h2 className="text-xl font-bold text-white">Scoring System</h2>
           </div>
-          
+
           {/* Best Score Explanation */}
           <div className="mb-8 p-4 rounded-xl bg-gradient-to-r from-[var(--accent-cyan)]/10 to-[var(--accent-purple)]/10 border border-[var(--accent-cyan)]/30">
             <div className="flex items-center gap-2 mb-2">
@@ -270,7 +270,7 @@ export default function LeaderboardPage() {
               <span className="font-bold text-white">Best Score = Max(Public, Private)</span>
             </div>
             <p className="text-white/60 text-sm">
-              Your leaderboard ranking is based on your <strong className="text-[var(--accent-cyan)]">best performance</strong> — 
+              Your leaderboard ranking is based on your <strong className="text-[var(--accent-cyan)]">best performance</strong> —
               the maximum of your public and private test scores. No weighted average, just your highest score!
             </p>
           </div>

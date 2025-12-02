@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 # Falls back to localhost for local testing
 PUBLIC_KB_BASE_URL = os.getenv(
     "PUBLIC_KB_BASE_URL", 
-    "https://squid-app-7q77b.ondigitalocean.app/api/api"
+    "https://backend-app-9a62n.ondigitalocean.app/api"
 )
 
 router = APIRouter()

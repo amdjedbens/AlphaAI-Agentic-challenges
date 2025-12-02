@@ -35,8 +35,10 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000", 
         "http://127.0.0.1:3000",
-        "https://whale-app-x8ze8.ondigitalocean.app",  # Production frontend
-        "https://squid-app-7q77b.ondigitalocean.app",  # Production backend
+        "https://whale-app-x8ze8.ondigitalocean.app",  # Old Production frontend
+        "https://frontend-app-qqdvy.ondigitalocean.app", # New Production frontend
+        "https://squid-app-7q77b.ondigitalocean.app",  # Old Production backend
+        "https://backend-app-9a62n.ondigitalocean.app", # New Production backend
         "*"  # Allow all origins for the hackathon
     ],
     allow_credentials=True,
